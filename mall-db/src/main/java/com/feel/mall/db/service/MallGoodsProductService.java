@@ -1,11 +1,9 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallGoodsProductMapper;
-import org.apache.ibatis.annotations.Param;
+import com.feel.mall.db.dao.MallGoodsProductMapper;
 import com.feel.mall.db.dao.GoodsProductMapper;
-import com.feel.mall.db.dao.LitemallGoodsProductMapper;
-import com.feel.mall.db.domain.LitemallGoodsProduct;
-import com.feel.mall.db.domain.LitemallGoodsProductExample;
+import com.feel.mall.db.domain.MallGoodsProduct;
+import com.feel.mall.db.domain.MallGoodsProductExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,42 +11,42 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallGoodsProductService {
+public class MallGoodsProductService {
     @Resource
-    private LitemallGoodsProductMapper litemallGoodsProductMapper;
+    private MallGoodsProductMapper mallGoodsProductMapper;
     @Resource
     private GoodsProductMapper goodsProductMapper;
 
-    public List<LitemallGoodsProduct> queryByGid(Integer gid) {
-        LitemallGoodsProductExample example = new LitemallGoodsProductExample();
+    public List<MallGoodsProduct> queryByGid(Integer gid) {
+        MallGoodsProductExample example = new MallGoodsProductExample();
         example.or().andGoodsIdEqualTo(gid).andDeletedEqualTo(false);
-        return litemallGoodsProductMapper.selectByExample(example);
+        return mallGoodsProductMapper.selectByExample(example);
     }
 
-    public LitemallGoodsProduct findById(Integer id) {
-        return litemallGoodsProductMapper.selectByPrimaryKey(id);
+    public MallGoodsProduct findById(Integer id) {
+        return mallGoodsProductMapper.selectByPrimaryKey(id);
     }
 
     public void deleteById(Integer id) {
-        litemallGoodsProductMapper.logicalDeleteByPrimaryKey(id);
+        mallGoodsProductMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallGoodsProduct goodsProduct) {
+    public void add(MallGoodsProduct goodsProduct) {
         goodsProduct.setAddTime(LocalDateTime.now());
         goodsProduct.setUpdateTime(LocalDateTime.now());
-        litemallGoodsProductMapper.insertSelective(goodsProduct);
+        mallGoodsProductMapper.insertSelective(goodsProduct);
     }
 
     public int count() {
-        LitemallGoodsProductExample example = new LitemallGoodsProductExample();
+        MallGoodsProductExample example = new MallGoodsProductExample();
         example.or().andDeletedEqualTo(false);
-        return (int) litemallGoodsProductMapper.countByExample(example);
+        return (int) mallGoodsProductMapper.countByExample(example);
     }
 
     public void deleteByGid(Integer gid) {
-        LitemallGoodsProductExample example = new LitemallGoodsProductExample();
+        MallGoodsProductExample example = new MallGoodsProductExample();
         example.or().andGoodsIdEqualTo(gid);
-        litemallGoodsProductMapper.logicalDeleteByExample(example);
+        mallGoodsProductMapper.logicalDeleteByExample(example);
     }
 
     public int addStock(Integer id, Short num){

@@ -4,12 +4,11 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallComment;
-import com.feel.mall.db.service.LitemallCommentService;
+import com.feel.mall.db.domain.MallComment;
+import com.feel.mall.db.service.MallCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ public class AdminCommentController {
     private final Log logger = LogFactory.getLog(AdminCommentController.class);
 
     @Autowired
-    private LitemallCommentService commentService;
+    private MallCommentService commentService;
 
     @RequiresPermissions("admin:comment:list")
     @RequiresPermissionsDesc(menu = {"商品管理", "评论管理"}, button = "查询")
@@ -33,14 +32,14 @@ public class AdminCommentController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallComment> commentList = commentService.querySelective(userId, valueId, page, limit, sort, order);
+        List<MallComment> commentList = commentService.querySelective(userId, valueId, page, limit, sort, order);
         return ResponseUtil.okList(commentList);
     }
 
     @RequiresPermissions("admin:comment:delete")
     @RequiresPermissionsDesc(menu = {"商品管理", "评论管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallComment comment) {
+    public Object delete(@RequestBody MallComment comment) {
         Integer id = comment.getId();
         if (id == null) {
             return ResponseUtil.badArgument();

@@ -1,7 +1,7 @@
 package com.feel.mall.core.system;
 
 import com.feel.mall.core.util.SystemInfoPrinter;
-import com.feel.mall.db.service.LitemallSystemConfigService;
+import com.feel.mall.db.service.MallSystemConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ class SystemInistService {
     private void inist() {
         systemInistService = this;
         initConfigs();
-        SystemInfoPrinter.printInfo("Litemall 初始化信息", getSystemInfo());
+        SystemInfoPrinter.printInfo("mall 初始化信息", getSystemInfo());
     }
 
 
@@ -49,18 +49,18 @@ class SystemInistService {
         DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_ORDER_UNCONFIRM, "7");
         DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_ORDER_COMMENT, "7");
         // 订单相关配置默认值
-        DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_MALL_NAME, "litemall");
+        DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_MALL_NAME, "mall");
         DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_MALL_ADDRESS, "上海");
         DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_MALL_PHONE, "021-xxxx-xxxx");
         DEFAULT_CONFIGS.put(SystemConfig.LITEMALL_MALL_QQ, "738696120");
     }
 
     @Autowired
-    private LitemallSystemConfigService litemallSystemConfigService;
+    private MallSystemConfigService mallSystemConfigService;
 
     private void initConfigs() {
         // 1. 读取数据库全部配置信息
-        Map<String, String> configs = litemallSystemConfigService.queryAll();
+        Map<String, String> configs = mallSystemConfigService.queryAll();
 
         // 2. 分析DEFAULT_CONFIGS
         for (Map.Entry<String, String> entry : DEFAULT_CONFIGS.entrySet()) {
@@ -69,7 +69,7 @@ class SystemInistService {
             }
 
             configs.put(entry.getKey(), entry.getValue());
-            litemallSystemConfigService.addConfig(entry.getKey(), entry.getValue());
+            mallSystemConfigService.addConfig(entry.getKey(), entry.getValue());
         }
 
         SystemConfig.setConfigs(configs);
@@ -84,27 +84,27 @@ class SystemInistService {
         infos.put("服务器端口", environment.getProperty("server.port"));
         infos.put("数据库USER", environment.getProperty("spring.datasource.druid.username"));
         infos.put("数据库地址", environment.getProperty("spring.datasource.druid.url"));
-        infos.put("调试级别", environment.getProperty("logging.level.org.linlinjava.litemall.wx"));
+        infos.put("调试级别", environment.getProperty("logging.level.com.feel.mall.wx"));
 
         // 测试获取application-core.yml配置信息
         infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 1, "模块状态");
-        infos.put("邮件", environment.getProperty("litemall.notify.mail.enable"));
-        infos.put("短信", environment.getProperty("litemall.notify.sms.enable"));
-        infos.put("模版消息", environment.getProperty("litemall.notify.wx.enable"));
-        infos.put("快递信息", environment.getProperty("litemall.express.enable"));
-        infos.put("快递鸟ID", environment.getProperty("litemall.express.appId"));
-        infos.put("对象存储", environment.getProperty("litemall.storage.active"));
-        infos.put("本地对象存储路径", environment.getProperty("litemall.storage.local.storagePath"));
-        infos.put("本地对象访问地址", environment.getProperty("litemall.storage.local.address"));
-        infos.put("本地对象访问端口", environment.getProperty("litemall.storage.local.port"));
+        infos.put("邮件", environment.getProperty("mall.notify.mail.enable"));
+        infos.put("短信", environment.getProperty("mall.notify.sms.enable"));
+        infos.put("模版消息", environment.getProperty("mall.notify.wx.enable"));
+        infos.put("快递信息", environment.getProperty("mall.express.enable"));
+        infos.put("快递鸟ID", environment.getProperty("mall.express.appId"));
+        infos.put("对象存储", environment.getProperty("mall.storage.active"));
+        infos.put("本地对象存储路径", environment.getProperty("mall.storage.local.storagePath"));
+        infos.put("本地对象访问地址", environment.getProperty("mall.storage.local.address"));
+        infos.put("本地对象访问端口", environment.getProperty("mall.storage.local.port"));
 
         // 微信相关信息
         infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 2, "微信相关");
-        infos.put("微信APP KEY", environment.getProperty("litemall.wx.app-id"));
-        infos.put("微信APP-SECRET", environment.getProperty("litemall.wx.app-secret"));
-        infos.put("微信支付MCH-ID", environment.getProperty("litemall.wx.mch-id"));
-        infos.put("微信支付MCH-KEY", environment.getProperty("litemall.wx.mch-key"));
-        infos.put("微信支付通知地址", environment.getProperty("litemall.wx.notify-url"));
+        infos.put("微信APP KEY", environment.getProperty("mall.wx.app-id"));
+        infos.put("微信APP-SECRET", environment.getProperty("mall.wx.app-secret"));
+        infos.put("微信支付MCH-ID", environment.getProperty("mall.wx.mch-id"));
+        infos.put("微信支付MCH-KEY", environment.getProperty("mall.wx.mch-key"));
+        infos.put("微信支付通知地址", environment.getProperty("mall.wx.notify-url"));
 
         //测试获取System表配置信息
         infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 3, "系统设置");

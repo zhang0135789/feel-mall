@@ -1,8 +1,8 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallSystemMapper;
-import com.feel.mall.db.domain.LitemallSystem;
-import com.feel.mall.db.domain.LitemallSystemExample;
+import com.feel.mall.db.dao.MallSystemMapper;
+import com.feel.mall.db.domain.MallSystem;
+import com.feel.mall.db.domain.MallSystemExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class LitemallSystemConfigService {
+public class MallSystemConfigService {
     @Resource
-    private LitemallSystemMapper systemMapper;
+    private MallSystemMapper mallSystemMapper;
 
     public Map<String, String> queryAll() {
-        LitemallSystemExample example = new LitemallSystemExample();
+        MallSystemExample example = new MallSystemExample();
         example.or().andDeletedEqualTo(false);
 
-        List<LitemallSystem> systemList = systemMapper.selectByExample(example);
+        List<MallSystem> systemList = mallSystemMapper.selectByExample(example);
         Map<String, String> systemConfigs = new HashMap<>();
-        for (LitemallSystem item : systemList) {
+        for (MallSystem item : systemList) {
             systemConfigs.put(item.getKeyName(), item.getKeyValue());
         }
 
@@ -30,44 +30,44 @@ public class LitemallSystemConfigService {
     }
 
     public Map<String, String> listMail() {
-        LitemallSystemExample example = new LitemallSystemExample();
+        MallSystemExample example = new MallSystemExample();
         example.or().andKeyNameLike("litemall_mall_%").andDeletedEqualTo(false);
-        List<LitemallSystem> systemList = systemMapper.selectByExample(example);
+        List<MallSystem> systemList = mallSystemMapper.selectByExample(example);
         Map<String, String> data = new HashMap<>();
-        for(LitemallSystem system : systemList){
+        for(MallSystem system : systemList){
             data.put(system.getKeyName(), system.getKeyValue());
         }
         return data;
     }
 
     public Map<String, String> listWx() {
-        LitemallSystemExample example = new LitemallSystemExample();
+        MallSystemExample example = new MallSystemExample();
         example.or().andKeyNameLike("litemall_wx_%").andDeletedEqualTo(false);
-        List<LitemallSystem> systemList = systemMapper.selectByExample(example);
+        List<MallSystem> systemList = mallSystemMapper.selectByExample(example);
         Map<String, String> data = new HashMap<>();
-        for(LitemallSystem system : systemList){
+        for(MallSystem system : systemList){
             data.put(system.getKeyName(), system.getKeyValue());
         }
         return data;
     }
 
     public Map<String, String> listOrder() {
-        LitemallSystemExample example = new LitemallSystemExample();
+        MallSystemExample example = new MallSystemExample();
         example.or().andKeyNameLike("litemall_order_%").andDeletedEqualTo(false);
-        List<LitemallSystem> systemList = systemMapper.selectByExample(example);
+        List<MallSystem> systemList = mallSystemMapper.selectByExample(example);
         Map<String, String> data = new HashMap<>();
-        for(LitemallSystem system : systemList){
+        for(MallSystem system : systemList){
             data.put(system.getKeyName(), system.getKeyValue());
         }
         return data;
     }
 
     public Map<String, String> listExpress() {
-        LitemallSystemExample example = new LitemallSystemExample();
+        MallSystemExample example = new MallSystemExample();
         example.or().andKeyNameLike("litemall_express_%").andDeletedEqualTo(false);
-        List<LitemallSystem> systemList = systemMapper.selectByExample(example);
+        List<MallSystem> systemList = mallSystemMapper.selectByExample(example);
         Map<String, String> data = new HashMap<>();
-        for(LitemallSystem system : systemList){
+        for(MallSystem system : systemList){
             data.put(system.getKeyName(), system.getKeyValue());
         }
         return data;
@@ -75,24 +75,24 @@ public class LitemallSystemConfigService {
 
     public void updateConfig(Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            LitemallSystemExample example = new LitemallSystemExample();
+            MallSystemExample example = new MallSystemExample();
             example.or().andKeyNameEqualTo(entry.getKey()).andDeletedEqualTo(false);
 
-            LitemallSystem system = new LitemallSystem();
+            MallSystem system = new MallSystem();
             system.setKeyName(entry.getKey());
             system.setKeyValue(entry.getValue());
             system.setUpdateTime(LocalDateTime.now());
-            systemMapper.updateByExampleSelective(system, example);
+            mallSystemMapper.updateByExampleSelective(system, example);
         }
 
     }
 
     public void addConfig(String key, String value) {
-        LitemallSystem system = new LitemallSystem();
+        MallSystem system = new MallSystem();
         system.setKeyName(key);
         system.setKeyValue(value);
         system.setAddTime(LocalDateTime.now());
         system.setUpdateTime(LocalDateTime.now());
-        systemMapper.insertSelective(system);
+        mallSystemMapper.insertSelective(system);
     }
 }

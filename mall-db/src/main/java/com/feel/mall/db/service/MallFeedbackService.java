@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallFeedbackMapper;
-import com.feel.mall.db.domain.LitemallFeedback;
-import com.feel.mall.db.domain.LitemallFeedbackExample;
+import com.feel.mall.db.dao.MallFeedbackMapper;
+import com.feel.mall.db.domain.MallFeedback;
+import com.feel.mall.db.domain.MallFeedbackExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,19 +16,19 @@ import java.util.List;
  * @date 2018/8/27 11:39
  */
 @Service
-public class LitemallFeedbackService {
+public class MallFeedbackService {
     @Autowired
-    private LitemallFeedbackMapper feedbackMapper;
+    private MallFeedbackMapper mallFeedbackMapper;
 
-    public Integer add(LitemallFeedback feedback) {
+    public Integer add(MallFeedback feedback) {
         feedback.setAddTime(LocalDateTime.now());
         feedback.setUpdateTime(LocalDateTime.now());
-        return feedbackMapper.insertSelective(feedback);
+        return mallFeedbackMapper.insertSelective(feedback);
     }
 
-    public List<LitemallFeedback> querySelective(Integer userId, String username, Integer page, Integer limit, String sort, String order) {
-        LitemallFeedbackExample example = new LitemallFeedbackExample();
-        LitemallFeedbackExample.Criteria criteria = example.createCriteria();
+    public List<MallFeedback> querySelective(Integer userId, String username, Integer page, Integer limit, String sort, String order) {
+        MallFeedbackExample example = new MallFeedbackExample();
+        MallFeedbackExample.Criteria criteria = example.createCriteria();
 
         if (userId != null) {
             criteria.andUserIdEqualTo(userId);
@@ -43,6 +43,6 @@ public class LitemallFeedbackService {
         }
 
         PageHelper.startPage(page, limit);
-        return feedbackMapper.selectByExample(example);
+        return mallFeedbackMapper.selectByExample(example);
     }
 }

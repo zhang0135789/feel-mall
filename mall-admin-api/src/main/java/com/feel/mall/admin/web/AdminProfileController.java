@@ -9,8 +9,8 @@ import org.apache.shiro.subject.Subject;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.util.bcrypt.BCryptPasswordEncoder;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.service.LitemallAdminService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.service.MallAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.feel.mall.admin.util.AdminResponseCode.ADMIN_INVALID_ACCOUNT;
-
 @RestController
 @RequestMapping("/admin/profile")
 @Validated
@@ -28,7 +26,7 @@ public class AdminProfileController {
     private final Log logger = LogFactory.getLog(AdminProfileController.class);
 
     @Autowired
-    private LitemallAdminService adminService;
+    private MallAdminService adminService;
 
     @RequiresAuthentication
     @PostMapping("/password")
@@ -43,7 +41,7 @@ public class AdminProfileController {
         }
 
         Subject currentUser = SecurityUtils.getSubject();
-        LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+        MallAdmin admin = (MallAdmin) currentUser.getPrincipal();
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(oldPassword, admin.getPassword())) {

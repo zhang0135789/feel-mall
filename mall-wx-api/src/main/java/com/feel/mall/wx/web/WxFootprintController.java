@@ -1,21 +1,18 @@
 package com.feel.mall.wx.web;
 
 import com.feel.mall.wx.annotation.LoginUser;
-import com.github.pagehelper.PageInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallFootprint;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.service.LitemallFootprintService;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallFootprint;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.service.MallFootprintService;
+import com.feel.mall.db.service.MallGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +28,9 @@ public class WxFootprintController {
     private final Log logger = LogFactory.getLog(WxFootprintController.class);
 
     @Autowired
-    private LitemallFootprintService footprintService;
+    private MallFootprintService footprintService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
     /**
      * 删除用户足迹
@@ -55,7 +52,7 @@ public class WxFootprintController {
         if (footprintId == null) {
             return ResponseUtil.badArgument();
         }
-        LitemallFootprint footprint = footprintService.findById(footprintId);
+        MallFootprint footprint = footprintService.findById(footprintId);
 
         if (footprint == null) {
             return ResponseUtil.badArgumentValue();
@@ -83,16 +80,16 @@ public class WxFootprintController {
             return ResponseUtil.unlogin();
         }
 
-        List<LitemallFootprint> footprintList = footprintService.queryByAddTime(userId, page, limit);
+        List<MallFootprint> footprintList = footprintService.queryByAddTime(userId, page, limit);
 
         List<Object> footprintVoList = new ArrayList<>(footprintList.size());
-        for (LitemallFootprint footprint : footprintList) {
+        for (MallFootprint footprint : footprintList) {
             Map<String, Object> c = new HashMap<String, Object>();
             c.put("id", footprint.getId());
             c.put("goodsId", footprint.getGoodsId());
             c.put("addTime", footprint.getAddTime());
 
-            LitemallGoods goods = goodsService.findById(footprint.getGoodsId());
+            MallGoods goods = goodsService.findById(footprint.getGoodsId());
             c.put("name", goods.getName());
             c.put("brief", goods.getBrief());
             c.put("picUrl", goods.getPicUrl());

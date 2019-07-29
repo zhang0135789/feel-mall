@@ -3,11 +3,11 @@ package com.feel.mall.wx.service;
 import com.github.pagehelper.Page;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.domain.LitemallGrouponRules;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.db.service.LitemallGrouponRulesService;
-import com.feel.mall.db.service.LitemallGrouponService;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.domain.MallGrouponRules;
+import com.feel.mall.db.service.MallGoodsService;
+import com.feel.mall.db.service.MallGrouponRulesService;
+import com.feel.mall.db.service.MallGrouponService;
 import com.feel.mall.wx.vo.GrouponRuleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class WxGrouponRuleService {
     private final Log logger = LogFactory.getLog(WxGrouponRuleService.class);
 
     @Autowired
-    private LitemallGrouponRulesService grouponRulesService;
+    private MallGrouponRulesService grouponRulesService;
     @Autowired
-    private LitemallGrouponService grouponService;
+    private MallGrouponService grouponService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
 
     public List<GrouponRuleVo> queryList(Integer page, Integer size) {
@@ -32,7 +32,7 @@ public class WxGrouponRuleService {
 
 
     public List<GrouponRuleVo> queryList(Integer page, Integer size, String sort, String order) {
-        Page<LitemallGrouponRules> grouponRulesList = (Page)grouponRulesService.queryList(page, size, sort, order);
+        Page<MallGrouponRules> grouponRulesList = (Page)grouponRulesService.queryList(page, size, sort, order);
 
         Page<GrouponRuleVo> grouponList = new Page<GrouponRuleVo>();
         grouponList.setPages(grouponRulesList.getPages());
@@ -40,9 +40,9 @@ public class WxGrouponRuleService {
         grouponList.setPageSize(grouponRulesList.getPageSize());
         grouponList.setTotal(grouponRulesList.getTotal());
 
-        for (LitemallGrouponRules rule : grouponRulesList) {
+        for (MallGrouponRules rule : grouponRulesList) {
             Integer goodsId = rule.getGoodsId();
-            LitemallGoods goods = goodsService.findById(goodsId);
+            MallGoods goods = goodsService.findById(goodsId);
             if (goods == null)
                 continue;
 

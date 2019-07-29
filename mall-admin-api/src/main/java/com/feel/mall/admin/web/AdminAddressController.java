@@ -4,13 +4,12 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallAddress;
-import com.feel.mall.db.service.LitemallAddressService;
-import com.feel.mall.db.service.LitemallRegionService;
+import com.feel.mall.db.domain.MallAddress;
+import com.feel.mall.db.service.MallAddressService;
+import com.feel.mall.db.service.MallRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +26,9 @@ public class AdminAddressController {
     private final Log logger = LogFactory.getLog(AdminAddressController.class);
 
     @Autowired
-    private LitemallAddressService addressService;
+    private MallAddressService addressService;
     @Autowired
-    private LitemallRegionService regionService;
+    private MallRegionService regionService;
 
     @RequiresPermissions("admin:address:list")
     @RequiresPermissionsDesc(menu = {"用户管理", "收货地址"}, button = "查询")
@@ -40,7 +39,7 @@ public class AdminAddressController {
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
 
-        List<LitemallAddress> addressList = addressService.querySelective(userId, name, page, limit, sort, order);
+        List<MallAddress> addressList = addressService.querySelective(userId, name, page, limit, sort, order);
         return ResponseUtil.okList(addressList);
     }
 }

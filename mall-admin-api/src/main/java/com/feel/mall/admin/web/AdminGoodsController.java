@@ -5,12 +5,10 @@ import com.feel.mall.admin.service.AdminGoodsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.admin.dto.GoodsAllinone;
-import com.feel.mall.admin.service.AdminGoodsService;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallGoods;
+import com.feel.mall.db.domain.MallGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +73,7 @@ public class AdminGoodsController {
     @RequiresPermissions("admin:goods:delete")
     @RequiresPermissionsDesc(menu = {"商品管理", "商品管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallGoods goods) {
+    public Object delete(@RequestBody MallGoods goods) {
         return adminGoodsService.delete(goods);
     }
 

@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallCartMapper;
-import com.feel.mall.db.domain.LitemallCart;
-import com.feel.mall.db.domain.LitemallCartExample;
+import com.feel.mall.db.dao.MallCartMapper;
+import com.feel.mall.db.domain.MallCart;
+import com.feel.mall.db.domain.MallCartExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,70 +12,70 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallCartService {
+public class MallCartService {
     @Resource
-    private LitemallCartMapper cartMapper;
+    private MallCartMapper mallCartMapper;
 
-    public LitemallCart queryExist(Integer goodsId, Integer productId, Integer userId) {
-        LitemallCartExample example = new LitemallCartExample();
+    public MallCart queryExist(Integer goodsId, Integer productId, Integer userId) {
+        MallCartExample example = new MallCartExample();
         example.or().andGoodsIdEqualTo(goodsId).andProductIdEqualTo(productId).andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        return cartMapper.selectOneByExample(example);
+        return mallCartMapper.selectOneByExample(example);
     }
 
-    public void add(LitemallCart cart) {
+    public void add(MallCart cart) {
         cart.setAddTime(LocalDateTime.now());
         cart.setUpdateTime(LocalDateTime.now());
-        cartMapper.insertSelective(cart);
+        mallCartMapper.insertSelective(cart);
     }
 
-    public int updateById(LitemallCart cart) {
+    public int updateById(MallCart cart) {
         cart.setUpdateTime(LocalDateTime.now());
-        return cartMapper.updateByPrimaryKeySelective(cart);
+        return mallCartMapper.updateByPrimaryKeySelective(cart);
     }
 
-    public List<LitemallCart> queryByUid(int userId) {
-        LitemallCartExample example = new LitemallCartExample();
+    public List<MallCart> queryByUid(int userId) {
+        MallCartExample example = new MallCartExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        return cartMapper.selectByExample(example);
+        return mallCartMapper.selectByExample(example);
     }
 
 
-    public List<LitemallCart> queryByUidAndChecked(Integer userId) {
-        LitemallCartExample example = new LitemallCartExample();
+    public List<MallCart> queryByUidAndChecked(Integer userId) {
+        MallCartExample example = new MallCartExample();
         example.or().andUserIdEqualTo(userId).andCheckedEqualTo(true).andDeletedEqualTo(false);
-        return cartMapper.selectByExample(example);
+        return mallCartMapper.selectByExample(example);
     }
 
     public int delete(List<Integer> productIdList, int userId) {
-        LitemallCartExample example = new LitemallCartExample();
+        MallCartExample example = new MallCartExample();
         example.or().andUserIdEqualTo(userId).andProductIdIn(productIdList);
-        return cartMapper.logicalDeleteByExample(example);
+        return mallCartMapper.logicalDeleteByExample(example);
     }
 
-    public LitemallCart findById(Integer id) {
-        return cartMapper.selectByPrimaryKey(id);
+    public MallCart findById(Integer id) {
+        return mallCartMapper.selectByPrimaryKey(id);
     }
 
     public int updateCheck(Integer userId, List<Integer> idsList, Boolean checked) {
-        LitemallCartExample example = new LitemallCartExample();
+        MallCartExample example = new MallCartExample();
         example.or().andUserIdEqualTo(userId).andProductIdIn(idsList).andDeletedEqualTo(false);
-        LitemallCart cart = new LitemallCart();
+        MallCart cart = new MallCart();
         cart.setChecked(checked);
         cart.setUpdateTime(LocalDateTime.now());
-        return cartMapper.updateByExampleSelective(cart, example);
+        return mallCartMapper.updateByExampleSelective(cart, example);
     }
 
     public void clearGoods(Integer userId) {
-        LitemallCartExample example = new LitemallCartExample();
+        MallCartExample example = new MallCartExample();
         example.or().andUserIdEqualTo(userId).andCheckedEqualTo(true);
-        LitemallCart cart = new LitemallCart();
+        MallCart cart = new MallCart();
         cart.setDeleted(true);
-        cartMapper.updateByExampleSelective(cart, example);
+        mallCartMapper.updateByExampleSelective(cart, example);
     }
 
-    public List<LitemallCart> querySelective(Integer userId, Integer goodsId, Integer page, Integer limit, String sort, String order) {
-        LitemallCartExample example = new LitemallCartExample();
-        LitemallCartExample.Criteria criteria = example.createCriteria();
+    public List<MallCart> querySelective(Integer userId, Integer goodsId, Integer page, Integer limit, String sort, String order) {
+        MallCartExample example = new MallCartExample();
+        MallCartExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(userId)) {
             criteria.andUserIdEqualTo(userId);
@@ -90,16 +90,16 @@ public class LitemallCartService {
         }
 
         PageHelper.startPage(page, limit);
-        return cartMapper.selectByExample(example);
+        return mallCartMapper.selectByExample(example);
     }
 
     public void deleteById(Integer id) {
-        cartMapper.logicalDeleteByPrimaryKey(id);
+        mallCartMapper.logicalDeleteByPrimaryKey(id);
     }
 
     public boolean checkExist(Integer goodsId) {
-        LitemallCartExample example = new LitemallCartExample();
+        MallCartExample example = new MallCartExample();
         example.or().andGoodsIdEqualTo(goodsId).andCheckedEqualTo(true).andDeletedEqualTo(false);
-        return cartMapper.countByExample(example) != 0;
+        return mallCartMapper.countByExample(example) != 0;
     }
 }

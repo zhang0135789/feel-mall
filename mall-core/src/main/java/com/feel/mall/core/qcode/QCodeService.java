@@ -6,10 +6,8 @@ import com.feel.mall.core.system.SystemConfig;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.feel.mall.core.storage.StorageService;
-import com.feel.mall.core.system.SystemConfig;
-import com.feel.mall.db.domain.LitemallGroupon;
-import com.feel.mall.db.domain.LitemallStorage;
+import com.feel.mall.db.domain.MallGroupon;
+import com.feel.mall.db.domain.MallStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,7 @@ public class QCodeService {
     private StorageService storageService;
 
 
-    public String createGrouponShareImage(String goodName, String goodPicUrl, LitemallGroupon groupon) {
+    public String createGrouponShareImage(String goodName, String goodPicUrl, MallGroupon groupon) {
         try {
             //创建该商品的二维码
             File file = wxMaService.getQrcodeService().createWxaCodeUnlimit("groupon," + groupon.getId(), "pages" +
@@ -40,7 +38,7 @@ public class QCodeService {
             byte[] imageData = drawPicture(inputStream, goodPicUrl, goodName);
             ByteArrayInputStream inputStream2 = new ByteArrayInputStream(imageData);
             //存储分享图
-            LitemallStorage storageInfo = storageService.store(inputStream2, imageData.length, "image/jpeg",
+            MallStorage storageInfo = storageService.store(inputStream2, imageData.length, "image/jpeg",
                     getKeyName(groupon.getId().toString()));
 
             return storageInfo.getUrl();
@@ -75,10 +73,10 @@ public class QCodeService {
             byte[] imageData = drawPicture(inputStream, goodPicUrl, goodName);
             ByteArrayInputStream inputStream2 = new ByteArrayInputStream(imageData);
             //存储分享图
-            LitemallStorage litemallStorage = storageService.store(inputStream2, imageData.length, "image/jpeg",
+            MallStorage mallStorage = storageService.store(inputStream2, imageData.length, "image/jpeg",
                     getKeyName(goodId));
 
-            return litemallStorage.getUrl();
+            return mallStorage.getUrl();
         } catch (WxErrorException e) {
             logger.error(e.getMessage(), e);
         } catch (FileNotFoundException e) {

@@ -1,10 +1,9 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallIssueMapper;
+import com.feel.mall.db.dao.MallIssueMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallIssueMapper;
-import com.feel.mall.db.domain.LitemallIssue;
-import com.feel.mall.db.domain.LitemallIssueExample;
+import com.feel.mall.db.domain.MallIssue;
+import com.feel.mall.db.domain.MallIssueExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,23 +12,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallIssueService {
+public class MallIssueService {
     @Resource
-    private LitemallIssueMapper issueMapper;
+    private MallIssueMapper mallIssueMapper;
 
     public void deleteById(Integer id) {
-        issueMapper.logicalDeleteByPrimaryKey(id);
+        mallIssueMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallIssue issue) {
+    public void add(MallIssue issue) {
         issue.setAddTime(LocalDateTime.now());
         issue.setUpdateTime(LocalDateTime.now());
-        issueMapper.insertSelective(issue);
+        mallIssueMapper.insertSelective(issue);
     }
 
-    public List<LitemallIssue> querySelective(String question, Integer page, Integer limit, String sort, String order) {
-        LitemallIssueExample example = new LitemallIssueExample();
-        LitemallIssueExample.Criteria criteria = example.createCriteria();
+    public List<MallIssue> querySelective(String question, Integer page, Integer limit, String sort, String order) {
+        MallIssueExample example = new MallIssueExample();
+        MallIssueExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(question)) {
             criteria.andQuestionLike("%" + question + "%");
@@ -41,15 +40,15 @@ public class LitemallIssueService {
         }
 
         PageHelper.startPage(page, limit);
-        return issueMapper.selectByExample(example);
+        return mallIssueMapper.selectByExample(example);
     }
 
-    public int updateById(LitemallIssue issue) {
+    public int updateById(MallIssue issue) {
         issue.setUpdateTime(LocalDateTime.now());
-        return issueMapper.updateByPrimaryKeySelective(issue);
+        return mallIssueMapper.updateByPrimaryKeySelective(issue);
     }
 
-    public LitemallIssue findById(Integer id) {
-        return issueMapper.selectByPrimaryKey(id);
+    public MallIssue findById(Integer id) {
+        return mallIssueMapper.selectByPrimaryKey(id);
     }
 }

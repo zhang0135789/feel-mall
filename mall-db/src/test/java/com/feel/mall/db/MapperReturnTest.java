@@ -3,8 +3,8 @@ package com.feel.mall.db;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.feel.mall.db.dao.LitemallSystemMapper;
-import com.feel.mall.db.domain.LitemallSystem;
+import com.feel.mall.db.dao.MallSystemMapper;
+import com.feel.mall.db.domain.MallSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,11 +16,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class MapperReturnTest {
 
     @Autowired
-    private LitemallSystemMapper systemMapper;
+    private MallSystemMapper systemMapper;
 
     @Test
     public void test() {
-        LitemallSystem system = new LitemallSystem();
+        MallSystem system = new MallSystem();
         system.setKeyName("test-system-key");
         system.setKeyValue("test-system-value");
         int updates = systemMapper.insertSelective(system);

@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.linlinjava</groupId>
-    <artifactId>litemall</artifactId>
+    <groupId>com.feel</groupId>
+    <artifactId>mall</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
@@ -20,38 +20,38 @@
     </properties>
 
     <modules>
-        <module>litemall-core</module>
-        <module>litemall-db</module>
-        <module>litemall-wx-api</module>
-        <module>litemall-admin-api</module>
-        <module>litemall-all</module>
+        <module>mall-core</module>
+        <module>mall-db</module>
+        <module>mall-wx-api</module>
+        <module>mall-admin-api</module>
+        <module>mall-all</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-core</artifactId>
+                <groupId>com.feel</groupId>
+                <artifactId>mall-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-db</artifactId>
+                <groupId>com.feel</groupId>
+                <artifactId>mall-db</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-wx-api</artifactId>
+                <groupId>com.feel</groupId>
+                <artifactId>mall-wx-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-admin-api</artifactId>
+                <groupId>com.feel</groupId>
+                <artifactId>mall-admin-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-all</artifactId>
+                <groupId>com.feel</groupId>
+                <artifactId>mall-all</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

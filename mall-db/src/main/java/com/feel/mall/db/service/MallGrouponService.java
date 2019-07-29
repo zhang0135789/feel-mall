@@ -2,9 +2,9 @@ package com.feel.mall.db.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallGrouponMapper;
-import com.feel.mall.db.domain.LitemallGroupon;
-import com.feel.mall.db.domain.LitemallGrouponExample;
+import com.feel.mall.db.dao.MallGrouponMapper;
+import com.feel.mall.db.domain.MallGroupon;
+import com.feel.mall.db.domain.MallGrouponExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallGrouponService {
+public class MallGrouponService {
     @Resource
-    private LitemallGrouponMapper mapper;
+    private MallGrouponMapper mallGrouponMapper;
 
     /**
      * 获取用户发起的团购记录
@@ -22,11 +22,11 @@ public class LitemallGrouponService {
      * @param userId
      * @return
      */
-    public List<LitemallGroupon> queryMyGroupon(Integer userId) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+    public List<MallGroupon> queryMyGroupon(Integer userId) {
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andUserIdEqualTo(userId).andCreatorUserIdEqualTo(userId).andGrouponIdEqualTo(0).andDeletedEqualTo(false).andPayedEqualTo(true);
         example.orderBy("add_time desc");
-        return mapper.selectByExample(example);
+        return mallGrouponMapper.selectByExample(example);
     }
 
     /**
@@ -35,11 +35,11 @@ public class LitemallGrouponService {
      * @param userId
      * @return
      */
-    public List<LitemallGroupon> queryMyJoinGroupon(Integer userId) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+    public List<MallGroupon> queryMyJoinGroupon(Integer userId) {
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andUserIdEqualTo(userId).andGrouponIdNotEqualTo(0).andDeletedEqualTo(false).andPayedEqualTo(true);
         example.orderBy("add_time desc");
-        return mapper.selectByExample(example);
+        return mallGrouponMapper.selectByExample(example);
     }
 
     /**
@@ -48,10 +48,10 @@ public class LitemallGrouponService {
      * @param orderId
      * @return
      */
-    public LitemallGroupon queryByOrderId(Integer orderId) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+    public MallGroupon queryByOrderId(Integer orderId) {
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andOrderIdEqualTo(orderId).andDeletedEqualTo(false);
-        return mapper.selectOneByExample(example);
+        return mallGrouponMapper.selectOneByExample(example);
     }
 
     /**
@@ -60,11 +60,11 @@ public class LitemallGrouponService {
      * @param id
      * @return
      */
-    public List<LitemallGroupon> queryJoinRecord(Integer id) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+    public List<MallGroupon> queryJoinRecord(Integer id) {
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andGrouponIdEqualTo(id).andDeletedEqualTo(false).andPayedEqualTo(true);
         example.orderBy("add_time desc");
-        return mapper.selectByExample(example);
+        return mallGrouponMapper.selectByExample(example);
     }
 
     /**
@@ -73,10 +73,10 @@ public class LitemallGrouponService {
      * @param id
      * @return
      */
-    public LitemallGroupon queryById(Integer id) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+    public MallGroupon queryById(Integer id) {
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andIdEqualTo(id).andDeletedEqualTo(false).andPayedEqualTo(true);
-        return mapper.selectOneByExample(example);
+        return mallGrouponMapper.selectOneByExample(example);
     }
 
     /**
@@ -86,14 +86,14 @@ public class LitemallGrouponService {
      * @return
      */
     public int countGroupon(Integer grouponId) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
+        MallGrouponExample example = new MallGrouponExample();
         example.or().andGrouponIdEqualTo(grouponId).andDeletedEqualTo(false).andPayedEqualTo(true);
-        return (int) mapper.countByExample(example);
+        return (int) mallGrouponMapper.countByExample(example);
     }
 
-    public int updateById(LitemallGroupon groupon) {
+    public int updateById(MallGroupon groupon) {
         groupon.setUpdateTime(LocalDateTime.now());
-        return mapper.updateByPrimaryKeySelective(groupon);
+        return mallGrouponMapper.updateByPrimaryKeySelective(groupon);
     }
 
     /**
@@ -102,10 +102,10 @@ public class LitemallGrouponService {
      * @param groupon
      * @return
      */
-    public int createGroupon(LitemallGroupon groupon) {
+    public int createGroupon(MallGroupon groupon) {
         groupon.setAddTime(LocalDateTime.now());
         groupon.setUpdateTime(LocalDateTime.now());
-        return mapper.insertSelective(groupon);
+        return mallGrouponMapper.insertSelective(groupon);
     }
 
 
@@ -119,9 +119,9 @@ public class LitemallGrouponService {
      * @param order
      * @return
      */
-    public List<LitemallGroupon> querySelective(String rulesId, Integer page, Integer size, String sort, String order) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
-        LitemallGrouponExample.Criteria criteria = example.createCriteria();
+    public List<MallGroupon> querySelective(String rulesId, Integer page, Integer size, String sort, String order) {
+        MallGrouponExample example = new MallGrouponExample();
+        MallGrouponExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(rulesId)) {
             criteria.andRulesIdEqualTo(Integer.parseInt(rulesId));
@@ -131,6 +131,6 @@ public class LitemallGrouponService {
         criteria.andGrouponIdEqualTo(0);
 
         PageHelper.startPage(page, size);
-        return mapper.selectByExample(example);
+        return mallGrouponMapper.selectByExample(example);
     }
 }

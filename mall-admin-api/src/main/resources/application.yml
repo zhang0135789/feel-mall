@@ -12,5 +12,5 @@ logging:
     root:  ERROR
     org.springframework:  ERROR
     org.mybatis:  ERROR
-    org.linlinjava.litemall.admin:  DEBUG
-    org.linlinjava.litemall:  ERROR
+    com.feel.mall.admin:  DEBUG
+    com.feel.mall:  ERROR

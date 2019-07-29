@@ -3,10 +3,10 @@ package com.feel.mall.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.service.LitemallGoodsProductService;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.db.service.LitemallOrderService;
-import com.feel.mall.db.service.LitemallUserService;
+import com.feel.mall.db.service.MallGoodsProductService;
+import com.feel.mall.db.service.MallGoodsService;
+import com.feel.mall.db.service.MallOrderService;
+import com.feel.mall.db.service.MallUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +23,13 @@ public class AdminDashbordController {
     private final Log logger = LogFactory.getLog(AdminDashbordController.class);
 
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
     @Autowired
-    private LitemallGoodsProductService productService;
+    private MallGoodsProductService productService;
     @Autowired
-    private LitemallOrderService orderService;
+    private MallOrderService orderService;
 
     @GetMapping("")
     public Object info() {

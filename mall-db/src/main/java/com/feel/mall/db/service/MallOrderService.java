@@ -1,10 +1,10 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallOrderMapper;
+import com.feel.mall.db.dao.MallOrderMapper;
 import com.feel.mall.db.dao.OrderMapper;
-import com.feel.mall.db.domain.LitemallOrder;
-import com.feel.mall.db.domain.LitemallOrderExample;
+import com.feel.mall.db.domain.MallOrder;
+import com.feel.mall.db.domain.MallOrderExample;
 import com.feel.mall.db.util.OrderUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,26 +19,26 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class LitemallOrderService {
+public class MallOrderService {
     @Resource
-    private LitemallOrderMapper litemallOrderMapper;
+    private MallOrderMapper mallOrderMapper;
     @Resource
     private OrderMapper orderMapper;
 
-    public int add(LitemallOrder order) {
+    public int add(MallOrder order) {
         order.setAddTime(LocalDateTime.now());
         order.setUpdateTime(LocalDateTime.now());
-        return litemallOrderMapper.insertSelective(order);
+        return mallOrderMapper.insertSelective(order);
     }
 
     public int count(Integer userId) {
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        return (int) litemallOrderMapper.countByExample(example);
+        return (int) mallOrderMapper.countByExample(example);
     }
 
-    public LitemallOrder findById(Integer orderId) {
-        return litemallOrderMapper.selectByPrimaryKey(orderId);
+    public MallOrder findById(Integer orderId) {
+        return mallOrderMapper.selectByPrimaryKey(orderId);
     }
 
     private String getRandomNum(Integer num) {
@@ -53,9 +53,9 @@ public class LitemallOrderService {
     }
 
     public int countByOrderSn(Integer userId, String orderSn) {
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andUserIdEqualTo(userId).andOrderSnEqualTo(orderSn).andDeletedEqualTo(false);
-        return (int) litemallOrderMapper.countByExample(example);
+        return (int) mallOrderMapper.countByExample(example);
     }
 
     // TODO 这里应该产生一个唯一的订单，但是实际上这里仍然存在两个订单相同的可能性
@@ -69,10 +69,10 @@ public class LitemallOrderService {
         return orderSn;
     }
 
-    public List<LitemallOrder> queryByOrderStatus(Integer userId, List<Short> orderStatus, Integer page, Integer limit, String sort, String order) {
-        LitemallOrderExample example = new LitemallOrderExample();
-        example.setOrderByClause(LitemallOrder.Column.addTime.desc());
-        LitemallOrderExample.Criteria criteria = example.or();
+    public List<MallOrder> queryByOrderStatus(Integer userId, List<Short> orderStatus, Integer page, Integer limit, String sort, String order) {
+        MallOrderExample example = new MallOrderExample();
+        example.setOrderByClause(MallOrder.Column.addTime.desc());
+        MallOrderExample.Criteria criteria = example.or();
         criteria.andUserIdEqualTo(userId);
         if (orderStatus != null) {
             criteria.andOrderStatusIn(orderStatus);
@@ -83,12 +83,12 @@ public class LitemallOrderService {
         }
 
         PageHelper.startPage(page, limit);
-        return litemallOrderMapper.selectByExample(example);
+        return mallOrderMapper.selectByExample(example);
     }
 
-    public List<LitemallOrder> querySelective(Integer userId, String orderSn, List<Short> orderStatusArray, Integer page, Integer limit, String sort, String order) {
-        LitemallOrderExample example = new LitemallOrderExample();
-        LitemallOrderExample.Criteria criteria = example.createCriteria();
+    public List<MallOrder> querySelective(Integer userId, String orderSn, List<Short> orderStatusArray, Integer page, Integer limit, String sort, String order) {
+        MallOrderExample example = new MallOrderExample();
+        MallOrderExample.Criteria criteria = example.createCriteria();
 
         if (userId != null) {
             criteria.andUserIdEqualTo(userId);
@@ -106,57 +106,57 @@ public class LitemallOrderService {
         }
 
         PageHelper.startPage(page, limit);
-        return litemallOrderMapper.selectByExample(example);
+        return mallOrderMapper.selectByExample(example);
     }
 
-    public int updateWithOptimisticLocker(LitemallOrder order) {
+    public int updateWithOptimisticLocker(MallOrder order) {
         LocalDateTime preUpdateTime = order.getUpdateTime();
         order.setUpdateTime(LocalDateTime.now());
         return orderMapper.updateWithOptimisticLocker(preUpdateTime, order);
     }
 
     public void deleteById(Integer id) {
-        litemallOrderMapper.logicalDeleteByPrimaryKey(id);
+        mallOrderMapper.logicalDeleteByPrimaryKey(id);
     }
 
     public int count() {
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andDeletedEqualTo(false);
-        return (int) litemallOrderMapper.countByExample(example);
+        return (int) mallOrderMapper.countByExample(example);
     }
 
-    public List<LitemallOrder> queryUnpaid(int minutes) {
+    public List<MallOrder> queryUnpaid(int minutes) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expired = now.minusMinutes(minutes);
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andOrderStatusEqualTo(OrderUtil.STATUS_CREATE).andAddTimeLessThan(expired).andDeletedEqualTo(false);
-        return litemallOrderMapper.selectByExample(example);
+        return mallOrderMapper.selectByExample(example);
     }
 
-    public List<LitemallOrder> queryUnconfirm(int days) {
+    public List<MallOrder> queryUnconfirm(int days) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expired = now.minusDays(days);
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andOrderStatusEqualTo(OrderUtil.STATUS_SHIP).andShipTimeLessThan(expired).andDeletedEqualTo(false);
-        return litemallOrderMapper.selectByExample(example);
+        return mallOrderMapper.selectByExample(example);
     }
 
-    public LitemallOrder findBySn(String orderSn) {
-        LitemallOrderExample example = new LitemallOrderExample();
+    public MallOrder findBySn(String orderSn) {
+        MallOrderExample example = new MallOrderExample();
         example.or().andOrderSnEqualTo(orderSn).andDeletedEqualTo(false);
-        return litemallOrderMapper.selectOneByExample(example);
+        return mallOrderMapper.selectOneByExample(example);
     }
 
     public Map<Object, Object> orderInfo(Integer userId) {
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        List<LitemallOrder> orders = litemallOrderMapper.selectByExampleSelective(example, LitemallOrder.Column.orderStatus, LitemallOrder.Column.comments);
+        List<MallOrder> orders = mallOrderMapper.selectByExampleSelective(example, MallOrder.Column.orderStatus, MallOrder.Column.comments);
 
         int unpaid = 0;
         int unship = 0;
         int unrecv = 0;
         int uncomment = 0;
-        for (LitemallOrder order : orders) {
+        for (MallOrder order : orders) {
             if (OrderUtil.isCreateStatus(order)) {
                 unpaid++;
             } else if (OrderUtil.isPayStatus(order)) {
@@ -179,11 +179,11 @@ public class LitemallOrderService {
 
     }
 
-    public List<LitemallOrder> queryComment(int days) {
+    public List<MallOrder> queryComment(int days) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expired = now.minusDays(days);
-        LitemallOrderExample example = new LitemallOrderExample();
+        MallOrderExample example = new MallOrderExample();
         example.or().andCommentsGreaterThan((short) 0).andConfirmTimeLessThan(expired).andDeletedEqualTo(false);
-        return litemallOrderMapper.selectByExample(example);
+        return mallOrderMapper.selectByExample(example);
     }
 }

@@ -1,45 +1,45 @@
 package com.feel.mall.admin.dto;
 
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.domain.LitemallGoodsAttribute;
-import com.feel.mall.db.domain.LitemallGoodsProduct;
-import com.feel.mall.db.domain.LitemallGoodsSpecification;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.domain.MallGoodsAttribute;
+import com.feel.mall.db.domain.MallGoodsProduct;
+import com.feel.mall.db.domain.MallGoodsSpecification;
 
 public class GoodsAllinone {
-    LitemallGoods goods;
-    LitemallGoodsSpecification[] specifications;
-    LitemallGoodsAttribute[] attributes;
-    LitemallGoodsProduct[] products;
+    MallGoods goods;
+    MallGoodsSpecification[] specifications;
+    MallGoodsAttribute[] attributes;
+    MallGoodsProduct[] products;
 
-    public LitemallGoods getGoods() {
+    public MallGoods getGoods() {
         return goods;
     }
 
-    public void setGoods(LitemallGoods goods) {
+    public void setGoods(MallGoods goods) {
         this.goods = goods;
     }
 
-    public LitemallGoodsProduct[] getProducts() {
+    public MallGoodsProduct[] getProducts() {
         return products;
     }
 
-    public void setProducts(LitemallGoodsProduct[] products) {
+    public void setProducts(MallGoodsProduct[] products) {
         this.products = products;
     }
 
-    public LitemallGoodsSpecification[] getSpecifications() {
+    public MallGoodsSpecification[] getSpecifications() {
         return specifications;
     }
 
-    public void setSpecifications(LitemallGoodsSpecification[] specifications) {
+    public void setSpecifications(MallGoodsSpecification[] specifications) {
         this.specifications = specifications;
     }
 
-    public LitemallGoodsAttribute[] getAttributes() {
+    public MallGoodsAttribute[] getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(LitemallGoodsAttribute[] attributes) {
+    public void setAttributes(MallGoodsAttribute[] attributes) {
         this.attributes = attributes;
     }
 

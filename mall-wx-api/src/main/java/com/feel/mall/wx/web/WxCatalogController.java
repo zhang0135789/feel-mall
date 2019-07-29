@@ -4,14 +4,12 @@ import com.feel.mall.wx.service.HomeCacheManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallCategory;
-import com.feel.mall.db.service.LitemallCategoryService;
-import com.feel.mall.wx.service.HomeCacheManager;
+import com.feel.mall.db.domain.MallCategory;
+import com.feel.mall.db.service.MallCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +27,7 @@ public class WxCatalogController {
     private final Log logger = LogFactory.getLog(WxCatalogController.class);
 
     @Autowired
-    private LitemallCategoryService categoryService;
+    private MallCategoryService categoryService;
 
     /**
      * 分类详情
@@ -43,10 +41,10 @@ public class WxCatalogController {
     public Object index(Integer id) {
 
         // 所有一级分类目录
-        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        List<MallCategory> l1CatList = categoryService.queryL1();
 
         // 当前一级分类目录
-        LitemallCategory currentCategory = null;
+        MallCategory currentCategory = null;
         if (id != null) {
             currentCategory = categoryService.findById(id);
         } else {
@@ -54,7 +52,7 @@ public class WxCatalogController {
         }
 
         // 当前一级分类目录对应的二级分类目录
-        List<LitemallCategory> currentSubCategory = null;
+        List<MallCategory> currentSubCategory = null;
         if (null != currentCategory) {
             currentSubCategory = categoryService.queryByPid(currentCategory.getId());
         }
@@ -80,21 +78,21 @@ public class WxCatalogController {
 
 
         // 所有一级分类目录
-        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        List<MallCategory> l1CatList = categoryService.queryL1();
 
         //所有子分类列表
-        Map<Integer, List<LitemallCategory>> allList = new HashMap<>();
-        List<LitemallCategory> sub;
-        for (LitemallCategory category : l1CatList) {
+        Map<Integer, List<MallCategory>> allList = new HashMap<>();
+        List<MallCategory> sub;
+        for (MallCategory category : l1CatList) {
             sub = categoryService.queryByPid(category.getId());
             allList.put(category.getId(), sub);
         }
 
         // 当前一级分类目录
-        LitemallCategory currentCategory = l1CatList.get(0);
+        MallCategory currentCategory = l1CatList.get(0);
 
         // 当前一级分类目录对应的二级分类目录
-        List<LitemallCategory> currentSubCategory = null;
+        List<MallCategory> currentSubCategory = null;
         if (null != currentCategory) {
             currentSubCategory = categoryService.queryByPid(currentCategory.getId());
         }
@@ -119,11 +117,11 @@ public class WxCatalogController {
     @GetMapping("current")
     public Object current(@NotNull Integer id) {
         // 当前分类
-        LitemallCategory currentCategory = categoryService.findById(id);
+        MallCategory currentCategory = categoryService.findById(id);
         if(currentCategory == null){
             return ResponseUtil.badArgumentValue();
         }
-        List<LitemallCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
+        List<MallCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("currentCategory", currentCategory);

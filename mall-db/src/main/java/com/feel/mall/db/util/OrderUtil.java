@@ -1,7 +1,6 @@
 package com.feel.mall.db.util;
 
-import com.feel.mall.db.domain.LitemallOrder;
-import com.feel.mall.db.domain.LitemallOrder;
+import com.feel.mall.db.domain.MallOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class OrderUtil {
     public static final Short STATUS_AUTO_CONFIRM = 402;
 
 
-    public static String orderStatusText(LitemallOrder order) {
+    public static String orderStatusText(MallOrder order) {
         int status = order.getOrderStatus().intValue();
 
         if (status == 101) {
@@ -76,7 +75,7 @@ public class OrderUtil {
     }
 
 
-    public static OrderHandleOption build(LitemallOrder order) {
+    public static OrderHandleOption build(MallOrder order) {
         int status = order.getOrderStatus().intValue();
         OrderHandleOption handleOption = new OrderHandleOption();
 
@@ -141,39 +140,39 @@ public class OrderUtil {
     }
 
 
-    public static boolean isCreateStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_CREATE == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isCreateStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_CREATE == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isPayStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_PAY == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isPayStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_PAY == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isShipStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_SHIP == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isShipStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_SHIP == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isConfirmStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_CONFIRM == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isConfirmStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_CONFIRM == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isCancelStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_CANCEL == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isCancelStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_CANCEL == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isAutoCancelStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_AUTO_CANCEL == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isAutoCancelStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_AUTO_CANCEL == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isRefundStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_REFUND == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isRefundStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_REFUND == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isRefundConfirmStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_REFUND_CONFIRM == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isRefundConfirmStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_REFUND_CONFIRM == mallOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isAutoConfirmStatus(LitemallOrder litemallOrder) {
-        return OrderUtil.STATUS_AUTO_CONFIRM == litemallOrder.getOrderStatus().shortValue();
+    public static boolean isAutoConfirmStatus(MallOrder mallOrder) {
+        return OrderUtil.STATUS_AUTO_CONFIRM == mallOrder.getOrderStatus().shortValue();
     }
 }

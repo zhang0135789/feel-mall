@@ -4,8 +4,7 @@ import com.feel.mall.wx.annotation.LoginUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.service.LitemallOrderService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.service.MallOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,7 @@ public class WxUserController {
     private final Log logger = LogFactory.getLog(WxUserController.class);
 
     @Autowired
-    private LitemallOrderService orderService;
+    private MallOrderService orderService;
 
     /**
      * 用户个人页面数据

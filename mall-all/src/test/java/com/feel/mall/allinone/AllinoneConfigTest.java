@@ -26,9 +26,9 @@ public class AllinoneConfigTest {
         // 测试获取application-admin.yml配置信息
 //        System.out.println(environment.getProperty(""));
         // 测试获取application.yml配置信息
-        System.out.println(environment.getProperty("logging.level.org.linlinjava.litemall.wx"));
-        System.out.println(environment.getProperty("logging.level.org.linlinjava.litemall.admin"));
-        System.out.println(environment.getProperty("logging.level.org.linlinjava.litemall"));
+        System.out.println(environment.getProperty("logging.level.com.feel.mall.wx"));
+        System.out.println(environment.getProperty("logging.level.com.feel.mall.admin"));
+        System.out.println(environment.getProperty("logging.level.com.feel.mall"));
     }
 
 }

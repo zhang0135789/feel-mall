@@ -467,20 +467,20 @@ logging:
     root:  ERROR
     org.springframework:  ERROR
     org.mybatis:  ERROR
-    org.linlinjava.litemall.core:  ERROR
-    org.linlinjava.litemall.db:  ERROR
-    org.linlinjava.litemall.admin:  ERROR
-    org.linlinjava.litemall.wx:  ERROR
-    org.linlinjava.litemall:  ERROR
+    com.feel.mall.core:  ERROR
+    com.feel.mall.db:  ERROR
+    com.feel.mall.admin:  ERROR
+    com.feel.mall.wx:  ERROR
+    com.feel.mall:  ERROR
 ```
 
 具体如何配置，请自行学习Spring Boot的日志配置。
 
-`org.linlinjava.litemall.core`定义litemall-core模块的日志级别
-`org.linlinjava.litemall.db`定义litemall-core模块的日志级别
-`org.linlinjava.litemall.wx`定义litemall-wx-api模块的日志级别
-`org.linlinjava.litemall.admin`定义litemall-admin-api模块的日志级别
-`org.linlinjava.litemall`而定义litemall所有后端模块的日志级别
+`com.feel.mall.core`定义litemall-core模块的日志级别
+`com.feel.mall.db`定义litemall-core模块的日志级别
+`com.feel.mall.wx`定义litemall-wx-api模块的日志级别
+`com.feel.mall.admin`定义litemall-admin-api模块的日志级别
+`com.feel.mall`而定义litemall所有后端模块的日志级别
 
 当然，如果开发者这里启动litemall后端模块级别是DEBUG时，可能会发现并没有很多日志，
 这是因为代码内部没有写很多日志，开发者可以根据需要添加。

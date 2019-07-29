@@ -1,10 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallLogMapper;
-import com.feel.mall.db.domain.LitemallAd;
-import com.feel.mall.db.domain.LitemallLog;
-import com.feel.mall.db.domain.LitemallLogExample;
+import com.feel.mall.db.dao.MallLogMapper;
+import com.feel.mall.db.domain.MallLog;
+import com.feel.mall.db.domain.MallLogExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,23 +12,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallLogService {
+public class MallLogService {
     @Resource
-    private LitemallLogMapper logMapper;
+    private MallLogMapper mallLogMapper;
 
     public void deleteById(Integer id) {
-        logMapper.logicalDeleteByPrimaryKey(id);
+        mallLogMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallLog log) {
+    public void add(MallLog log) {
         log.setAddTime(LocalDateTime.now());
         log.setUpdateTime(LocalDateTime.now());
-        logMapper.insertSelective(log);
+        mallLogMapper.insertSelective(log);
     }
 
-    public List<LitemallLog> querySelective(String name, Integer page, Integer size, String sort, String order) {
-        LitemallLogExample example = new LitemallLogExample();
-        LitemallLogExample.Criteria criteria = example.createCriteria();
+    public List<MallLog> querySelective(String name, Integer page, Integer size, String sort, String order) {
+        MallLogExample example = new MallLogExample();
+        MallLogExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(name)) {
             criteria.andAdminLike("%" + name + "%");
@@ -41,6 +40,6 @@ public class LitemallLogService {
         }
 
         PageHelper.startPage(page, size);
-        return logMapper.selectByExample(example);
+        return mallLogMapper.selectByExample(example);
     }
 }

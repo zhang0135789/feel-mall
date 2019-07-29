@@ -9,8 +9,6 @@ import com.feel.mall.admin.dto.GoodsAllinone;
 import com.feel.mall.admin.vo.CatVo;
 import com.feel.mall.core.qcode.QCodeService;
 import com.feel.mall.core.util.ResponseUtil;
-import org.linlinjava.litemall.db.domain.*;
-import org.linlinjava.litemall.db.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,36 +20,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.feel.mall.admin.util.AdminResponseCode.GOODS_NAME_EXIST;
-
 @Service
 public class AdminGoodsService {
     private final Log logger = LogFactory.getLog(AdminGoodsService.class);
 
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
     @Autowired
-    private LitemallGoodsSpecificationService specificationService;
+    private MallGoodsSpecificationService specificationService;
     @Autowired
-    private LitemallGoodsAttributeService attributeService;
+    private MallGoodsAttributeService attributeService;
     @Autowired
-    private LitemallGoodsProductService productService;
+    private MallGoodsProductService productService;
     @Autowired
-    private LitemallCategoryService categoryService;
+    private MallCategoryService categoryService;
     @Autowired
-    private LitemallBrandService brandService;
+    private MallBrandService brandService;
 
     @Autowired
     private QCodeService qCodeService;
 
     public Object list(String goodsSn, String name,
                        Integer page, Integer limit, String sort, String order) {
-        List<LitemallGoods> goodsList = goodsService.querySelective(goodsSn, name, page, limit, sort, order);
+        List<MallGoods> goodsList = goodsService.querySelective(goodsSn, name, page, limit, sort, order);
         return ResponseUtil.okList(goodsList);
     }
 
     private Object validate(GoodsAllinone goodsAllinone) {
-        LitemallGoods goods = goodsAllinone.getGoods();
+        MallGoods goods = goodsAllinone.getGoods();
         String name = goods.getName();
         if (StringUtils.isEmpty(name)) {
             return ResponseUtil.badArgument();
@@ -75,8 +71,8 @@ public class AdminGoodsService {
             }
         }
 
-        LitemallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
-        for (LitemallGoodsAttribute attribute : attributes) {
+        MallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
+        for (MallGoodsAttribute attribute : attributes) {
             String attr = attribute.getAttribute();
             if (StringUtils.isEmpty(attr)) {
                 return ResponseUtil.badArgument();
@@ -87,8 +83,8 @@ public class AdminGoodsService {
             }
         }
 
-        LitemallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
-        for (LitemallGoodsSpecification specification : specifications) {
+        MallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
+        for (MallGoodsSpecification specification : specifications) {
             String spec = specification.getSpecification();
             if (StringUtils.isEmpty(spec)) {
                 return ResponseUtil.badArgument();
@@ -99,8 +95,8 @@ public class AdminGoodsService {
             }
         }
 
-        LitemallGoodsProduct[] products = goodsAllinone.getProducts();
-        for (LitemallGoodsProduct product : products) {
+        MallGoodsProduct[] products = goodsAllinone.getProducts();
+        for (MallGoodsProduct product : products) {
             Integer number = product.getNumber();
             if (number == null || number < 0) {
                 return ResponseUtil.badArgument();
@@ -143,10 +139,10 @@ public class AdminGoodsService {
             return error;
         }
 
-        LitemallGoods goods = goodsAllinone.getGoods();
-        LitemallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
-        LitemallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
-        LitemallGoodsProduct[] products = goodsAllinone.getProducts();
+        MallGoods goods = goodsAllinone.getGoods();
+        MallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
+        MallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
+        MallGoodsProduct[] products = goodsAllinone.getProducts();
 
         Integer id = goods.getId();
 
@@ -165,19 +161,19 @@ public class AdminGoodsService {
         productService.deleteByGid(gid);
 
         // 商品规格表litemall_goods_specification
-        for (LitemallGoodsSpecification specification : specifications) {
+        for (MallGoodsSpecification specification : specifications) {
             specification.setGoodsId(goods.getId());
             specificationService.add(specification);
         }
 
         // 商品参数表litemall_goods_attribute
-        for (LitemallGoodsAttribute attribute : attributes) {
+        for (MallGoodsAttribute attribute : attributes) {
             attribute.setGoodsId(goods.getId());
             attributeService.add(attribute);
         }
 
         // 商品货品表litemall_product
-        for (LitemallGoodsProduct product : products) {
+        for (MallGoodsProduct product : products) {
             product.setGoodsId(goods.getId());
             productService.add(product);
         }
@@ -186,7 +182,7 @@ public class AdminGoodsService {
     }
 
     @Transactional
-    public Object delete(LitemallGoods goods) {
+    public Object delete(MallGoods goods) {
         Integer id = goods.getId();
         if (id == null) {
             return ResponseUtil.badArgument();
@@ -207,10 +203,10 @@ public class AdminGoodsService {
             return error;
         }
 
-        LitemallGoods goods = goodsAllinone.getGoods();
-        LitemallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
-        LitemallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
-        LitemallGoodsProduct[] products = goodsAllinone.getProducts();
+        MallGoods goods = goodsAllinone.getGoods();
+        MallGoodsAttribute[] attributes = goodsAllinone.getAttributes();
+        MallGoodsSpecification[] specifications = goodsAllinone.getSpecifications();
+        MallGoodsProduct[] products = goodsAllinone.getProducts();
 
         String name = goods.getName();
         if (goodsService.checkExistByName(name)) {
@@ -230,19 +226,19 @@ public class AdminGoodsService {
         }
 
         // 商品规格表litemall_goods_specification
-        for (LitemallGoodsSpecification specification : specifications) {
+        for (MallGoodsSpecification specification : specifications) {
             specification.setGoodsId(goods.getId());
             specificationService.add(specification);
         }
 
         // 商品参数表litemall_goods_attribute
-        for (LitemallGoodsAttribute attribute : attributes) {
+        for (MallGoodsAttribute attribute : attributes) {
             attribute.setGoodsId(goods.getId());
             attributeService.add(attribute);
         }
 
         // 商品货品表litemall_product
-        for (LitemallGoodsProduct product : products) {
+        for (MallGoodsProduct product : products) {
             product.setGoodsId(goods.getId());
             productService.add(product);
         }
@@ -252,17 +248,17 @@ public class AdminGoodsService {
     public Object list2() {
         // http://element-cn.eleme.io/#/zh-CN/component/cascader
         // 管理员设置“所属分类”
-        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        List<MallCategory> l1CatList = categoryService.queryL1();
         List<CatVo> categoryList = new ArrayList<>(l1CatList.size());
 
-        for (LitemallCategory l1 : l1CatList) {
+        for (MallCategory l1 : l1CatList) {
             CatVo l1CatVo = new CatVo();
             l1CatVo.setValue(l1.getId());
             l1CatVo.setLabel(l1.getName());
 
-            List<LitemallCategory> l2CatList = categoryService.queryByPid(l1.getId());
+            List<MallCategory> l2CatList = categoryService.queryByPid(l1.getId());
             List<CatVo> children = new ArrayList<>(l2CatList.size());
-            for (LitemallCategory l2 : l2CatList) {
+            for (MallCategory l2 : l2CatList) {
                 CatVo l2CatVo = new CatVo();
                 l2CatVo.setValue(l2.getId());
                 l2CatVo.setLabel(l2.getName());
@@ -275,9 +271,9 @@ public class AdminGoodsService {
 
         // http://element-cn.eleme.io/#/zh-CN/component/select
         // 管理员设置“所属品牌商”
-        List<LitemallBrand> list = brandService.all();
+        List<MallBrand> list = brandService.all();
         List<Map<String, Object>> brandList = new ArrayList<>(l1CatList.size());
-        for (LitemallBrand brand : list) {
+        for (MallBrand brand : list) {
             Map<String, Object> b = new HashMap<>(2);
             b.put("value", brand.getId());
             b.put("label", brand.getName());
@@ -291,13 +287,13 @@ public class AdminGoodsService {
     }
 
     public Object detail(Integer id) {
-        LitemallGoods goods = goodsService.findById(id);
-        List<LitemallGoodsProduct> products = productService.queryByGid(id);
-        List<LitemallGoodsSpecification> specifications = specificationService.queryByGid(id);
-        List<LitemallGoodsAttribute> attributes = attributeService.queryByGid(id);
+        MallGoods goods = goodsService.findById(id);
+        List<MallGoodsProduct> products = productService.queryByGid(id);
+        List<MallGoodsSpecification> specifications = specificationService.queryByGid(id);
+        List<MallGoodsAttribute> attributes = attributeService.queryByGid(id);
 
         Integer categoryId = goods.getCategoryId();
-        LitemallCategory category = categoryService.findById(categoryId);
+        MallCategory category = categoryService.findById(categoryId);
         Integer[] categoryIds = new Integer[]{};
         if (category != null) {
             Integer parentCategoryId = category.getPid();

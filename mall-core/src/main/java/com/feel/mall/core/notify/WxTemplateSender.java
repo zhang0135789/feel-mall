@@ -5,8 +5,8 @@ import cn.binarywang.wx.miniapp.bean.WxMaTemplateData;
 import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.feel.mall.db.domain.LitemallUserFormid;
-import com.feel.mall.db.service.LitemallUserFormIdService;
+import com.feel.mall.db.domain.MallUserFormid;
+import com.feel.mall.db.service.MallUserFormIdService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class WxTemplateSender {
     private WxMaService wxMaService;
 
     @Autowired
-    private LitemallUserFormIdService formIdService;
+    private MallUserFormIdService formIdService;
 
     /**
      * 发送微信消息(模板消息),不带跳转
@@ -49,7 +49,7 @@ public class WxTemplateSender {
 
     private void sendMsg(String touser, String templatId, String[] parms, String page, String color,
                          String emphasisKeyword) {
-        LitemallUserFormid userFormid = formIdService.queryByOpenId(touser);
+        MallUserFormid userFormid = formIdService.queryByOpenId(touser);
         if (userFormid == null)
             return;
 

@@ -1,11 +1,10 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallTopicMapper;
+import com.feel.mall.db.dao.MallTopicMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallTopicMapper;
-import com.feel.mall.db.domain.LitemallTopic;
-import com.feel.mall.db.domain.LitemallTopic.Column;
-import com.feel.mall.db.domain.LitemallTopicExample;
+import com.feel.mall.db.domain.MallTopic;
+import com.feel.mall.db.domain.MallTopic.Column;
+import com.feel.mall.db.domain.MallTopicExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -14,48 +13,48 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallTopicService {
+public class MallTopicService {
     @Resource
-    private LitemallTopicMapper topicMapper;
+    private MallTopicMapper mallTopicMapper;
     private Column[] columns = new Column[]{Column.id, Column.title, Column.subtitle, Column.price, Column.picUrl, Column.readCount};
 
-    public List<LitemallTopic> queryList(int offset, int limit) {
+    public List<MallTopic> queryList(int offset, int limit) {
         return queryList(offset, limit, "add_time", "desc");
     }
 
-    public List<LitemallTopic> queryList(int offset, int limit, String sort, String order) {
-        LitemallTopicExample example = new LitemallTopicExample();
+    public List<MallTopic> queryList(int offset, int limit, String sort, String order) {
+        MallTopicExample example = new MallTopicExample();
         example.or().andDeletedEqualTo(false);
         example.setOrderByClause(sort + " " + order);
         PageHelper.startPage(offset, limit);
-        return topicMapper.selectByExampleSelective(example, columns);
+        return mallTopicMapper.selectByExampleSelective(example, columns);
     }
 
     public int queryTotal() {
-        LitemallTopicExample example = new LitemallTopicExample();
+        MallTopicExample example = new MallTopicExample();
         example.or().andDeletedEqualTo(false);
-        return (int) topicMapper.countByExample(example);
+        return (int) mallTopicMapper.countByExample(example);
     }
 
-    public LitemallTopic findById(Integer id) {
-        LitemallTopicExample example = new LitemallTopicExample();
+    public MallTopic findById(Integer id) {
+        MallTopicExample example = new MallTopicExample();
         example.or().andIdEqualTo(id).andDeletedEqualTo(false);
-        return topicMapper.selectOneByExampleWithBLOBs(example);
+        return mallTopicMapper.selectOneByExampleWithBLOBs(example);
     }
 
-    public List<LitemallTopic> queryRelatedList(Integer id, int offset, int limit) {
-        LitemallTopicExample example = new LitemallTopicExample();
+    public List<MallTopic> queryRelatedList(Integer id, int offset, int limit) {
+        MallTopicExample example = new MallTopicExample();
         example.or().andIdEqualTo(id).andDeletedEqualTo(false);
-        List<LitemallTopic> topics = topicMapper.selectByExample(example);
+        List<MallTopic> topics = mallTopicMapper.selectByExample(example);
         if (topics.size() == 0) {
             return queryList(offset, limit, "add_time", "desc");
         }
-        LitemallTopic topic = topics.get(0);
+        MallTopic topic = topics.get(0);
 
-        example = new LitemallTopicExample();
+        example = new MallTopicExample();
         example.or().andIdNotEqualTo(topic.getId()).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
-        List<LitemallTopic> relateds = topicMapper.selectByExampleWithBLOBs(example);
+        List<MallTopic> relateds = mallTopicMapper.selectByExampleWithBLOBs(example);
         if (relateds.size() != 0) {
             return relateds;
         }
@@ -63,9 +62,9 @@ public class LitemallTopicService {
         return queryList(offset, limit, "add_time", "desc");
     }
 
-    public List<LitemallTopic> querySelective(String title, String subtitle, Integer page, Integer limit, String sort, String order) {
-        LitemallTopicExample example = new LitemallTopicExample();
-        LitemallTopicExample.Criteria criteria = example.createCriteria();
+    public List<MallTopic> querySelective(String title, String subtitle, Integer page, Integer limit, String sort, String order) {
+        MallTopicExample example = new MallTopicExample();
+        MallTopicExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(title)) {
             criteria.andTitleLike("%" + title + "%");
@@ -80,24 +79,24 @@ public class LitemallTopicService {
         }
 
         PageHelper.startPage(page, limit);
-        return topicMapper.selectByExampleWithBLOBs(example);
+        return mallTopicMapper.selectByExampleWithBLOBs(example);
     }
 
-    public int updateById(LitemallTopic topic) {
+    public int updateById(MallTopic topic) {
         topic.setUpdateTime(LocalDateTime.now());
-        LitemallTopicExample example = new LitemallTopicExample();
+        MallTopicExample example = new MallTopicExample();
         example.or().andIdEqualTo(topic.getId());
-        return topicMapper.updateByExampleSelective(topic, example);
+        return mallTopicMapper.updateByExampleSelective(topic, example);
     }
 
     public void deleteById(Integer id) {
-        topicMapper.logicalDeleteByPrimaryKey(id);
+        mallTopicMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallTopic topic) {
+    public void add(MallTopic topic) {
         topic.setAddTime(LocalDateTime.now());
         topic.setUpdateTime(LocalDateTime.now());
-        topicMapper.insertSelective(topic);
+        mallTopicMapper.insertSelective(topic);
     }
 
 

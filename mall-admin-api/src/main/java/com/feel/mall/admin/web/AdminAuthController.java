@@ -16,10 +16,10 @@ import org.apache.shiro.subject.Subject;
 import com.feel.mall.core.util.IpUtil;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.service.LitemallAdminService;
-import com.feel.mall.db.service.LitemallPermissionService;
-import com.feel.mall.db.service.LitemallRoleService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.service.MallAdminService;
+import com.feel.mall.db.service.MallPermissionService;
+import com.feel.mall.db.service.MallRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
@@ -37,11 +37,11 @@ public class AdminAuthController {
     private final Log logger = LogFactory.getLog(AdminAuthController.class);
 
     @Autowired
-    private LitemallAdminService adminService;
+    private MallAdminService adminService;
     @Autowired
-    private LitemallRoleService roleService;
+    private MallRoleService roleService;
     @Autowired
-    private LitemallPermissionService permissionService;
+    private MallPermissionService permissionService;
     @Autowired
     private LogHelper logHelper;
 
@@ -73,7 +73,7 @@ public class AdminAuthController {
         }
 
         currentUser = SecurityUtils.getSubject();
-        LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+        MallAdmin admin = (MallAdmin) currentUser.getPrincipal();
         admin.setLastLoginIp(IpUtil.getIpAddr(request));
         admin.setLastLoginTime(LocalDateTime.now());
         adminService.updateById(admin);
@@ -109,7 +109,7 @@ public class AdminAuthController {
     @GetMapping("/info")
     public Object info() {
         Subject currentUser = SecurityUtils.getSubject();
-        LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+        MallAdmin admin = (MallAdmin) currentUser.getPrincipal();
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", admin.getUsername());
@@ -132,7 +132,7 @@ public class AdminAuthController {
     private Collection<String> toApi(Set<String> permissions) {
         if (systemPermissionsMap == null) {
             systemPermissionsMap = new HashMap<>();
-            final String basicPackage = "org.linlinjava.litemall.admin";
+            final String basicPackage = "com.feel.mall.admin";
             List<Permission> systemPermissions = PermissionUtil.listPermission(context, basicPackage);
             for (Permission permission : systemPermissions) {
                 String perm = permission.getRequiresPermissions().value()[0];

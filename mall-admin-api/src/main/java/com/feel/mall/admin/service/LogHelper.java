@@ -3,9 +3,9 @@ package com.feel.mall.admin.service;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import com.feel.mall.core.util.IpUtil;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.domain.LitemallLog;
-import com.feel.mall.db.service.LitemallLogService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.domain.MallLog;
+import com.feel.mall.db.service.MallLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,7 +30,7 @@ public class LogHelper {
     public static final  Integer LOG_TYPE_OTHER = 3;
 
     @Autowired
-    private LitemallLogService logService;
+    private MallLogService logService;
 
     public void logGeneralSucceed(String action) {
         logAdmin(LOG_TYPE_GENERAL, action, true, "", "");
@@ -82,11 +82,11 @@ public class LogHelper {
     }
 
     public void logAdmin(Integer type, String action, Boolean succeed, String result, String comment) {
-        LitemallLog log = new LitemallLog();
+        MallLog log = new MallLog();
 
         Subject currentUser = SecurityUtils.getSubject();
         if (currentUser != null) {
-            LitemallAdmin admin = (LitemallAdmin) currentUser.getPrincipal();
+            MallAdmin admin = (MallAdmin) currentUser.getPrincipal();
             if (admin != null) {
                 log.setAdmin(admin.getUsername());
             } else {

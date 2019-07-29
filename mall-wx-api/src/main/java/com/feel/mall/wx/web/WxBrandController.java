@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallBrand;
-import com.feel.mall.db.service.LitemallBrandService;
+import com.feel.mall.db.domain.MallBrand;
+import com.feel.mall.db.service.MallBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 专题服务
@@ -29,7 +27,7 @@ public class WxBrandController {
     private final Log logger = LogFactory.getLog(WxBrandController.class);
 
     @Autowired
-    private LitemallBrandService brandService;
+    private MallBrandService brandService;
 
     /**
      * 品牌列表
@@ -43,7 +41,7 @@ public class WxBrandController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallBrand> brandList = brandService.query(page, limit, sort, order);
+        List<MallBrand> brandList = brandService.query(page, limit, sort, order);
         return ResponseUtil.okList(brandList);
     }
 
@@ -55,7 +53,7 @@ public class WxBrandController {
      */
     @GetMapping("detail")
     public Object detail(@NotNull Integer id) {
-        LitemallBrand entity = brandService.findById(id);
+        MallBrand entity = brandService.findById(id);
         if (entity == null) {
             return ResponseUtil.badArgumentValue();
         }

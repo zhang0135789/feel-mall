@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallFootprintMapper;
-import com.feel.mall.db.domain.LitemallFootprint;
-import com.feel.mall.db.domain.LitemallFootprintExample;
+import com.feel.mall.db.dao.MallFootprintMapper;
+import com.feel.mall.db.domain.MallFootprint;
+import com.feel.mall.db.domain.MallFootprintExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,35 +12,35 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallFootprintService {
+public class MallFootprintService {
     @Resource
-    private LitemallFootprintMapper footprintMapper;
+    private MallFootprintMapper mallFootprintMapper;
 
-    public List<LitemallFootprint> queryByAddTime(Integer userId, Integer page, Integer size) {
-        LitemallFootprintExample example = new LitemallFootprintExample();
+    public List<MallFootprint> queryByAddTime(Integer userId, Integer page, Integer size) {
+        MallFootprintExample example = new MallFootprintExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        example.setOrderByClause(LitemallFootprint.Column.addTime.desc());
+        example.setOrderByClause(MallFootprint.Column.addTime.desc());
         PageHelper.startPage(page, size);
-        return footprintMapper.selectByExample(example);
+        return mallFootprintMapper.selectByExample(example);
     }
 
-    public LitemallFootprint findById(Integer id) {
-        return footprintMapper.selectByPrimaryKey(id);
+    public MallFootprint findById(Integer id) {
+        return mallFootprintMapper.selectByPrimaryKey(id);
     }
 
     public void deleteById(Integer id) {
-        footprintMapper.logicalDeleteByPrimaryKey(id);
+        mallFootprintMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallFootprint footprint) {
+    public void add(MallFootprint footprint) {
         footprint.setAddTime(LocalDateTime.now());
         footprint.setUpdateTime(LocalDateTime.now());
-        footprintMapper.insertSelective(footprint);
+        mallFootprintMapper.insertSelective(footprint);
     }
 
-    public List<LitemallFootprint> querySelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
-        LitemallFootprintExample example = new LitemallFootprintExample();
-        LitemallFootprintExample.Criteria criteria = example.createCriteria();
+    public List<MallFootprint> querySelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
+        MallFootprintExample example = new MallFootprintExample();
+        MallFootprintExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(userId)) {
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -55,6 +55,6 @@ public class LitemallFootprintService {
         }
 
         PageHelper.startPage(page, size);
-        return footprintMapper.selectByExample(example);
+        return mallFootprintMapper.selectByExample(example);
     }
 }

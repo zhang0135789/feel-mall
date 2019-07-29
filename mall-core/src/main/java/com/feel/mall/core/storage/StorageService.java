@@ -1,8 +1,8 @@
 package com.feel.mall.core.storage;
 
 import com.feel.mall.core.util.CharUtil;
-import com.feel.mall.db.domain.LitemallStorage;
-import com.feel.mall.db.service.LitemallStorageService;
+import com.feel.mall.db.domain.MallStorage;
+import com.feel.mall.db.service.MallStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
@@ -17,7 +17,7 @@ public class StorageService {
     private String active;
     private Storage storage;
     @Autowired
-    private LitemallStorageService litemallStorageService;
+    private MallStorageService mallStorageService;
 
     public String getActive() {
         return active;
@@ -43,18 +43,18 @@ public class StorageService {
      * @param contentType   文件类型
      * @param fileName      文件索引名
      */
-    public LitemallStorage store(InputStream inputStream, long contentLength, String contentType, String fileName) {
+    public MallStorage store(InputStream inputStream, long contentLength, String contentType, String fileName) {
         String key = generateKey(fileName);
         storage.store(inputStream, contentLength, contentType, key);
 
         String url = generateUrl(key);
-        LitemallStorage storageInfo = new LitemallStorage();
+        MallStorage storageInfo = new MallStorage();
         storageInfo.setName(fileName);
         storageInfo.setSize((int) contentLength);
         storageInfo.setType(contentType);
         storageInfo.setKey(key);
         storageInfo.setUrl(url);
-        litemallStorageService.add(storageInfo);
+        mallStorageService.add(storageInfo);
 
         return storageInfo;
     }
@@ -64,11 +64,11 @@ public class StorageService {
         String suffix = originalFilename.substring(index);
 
         String key = null;
-        LitemallStorage storageInfo = null;
+        MallStorage storageInfo = null;
 
         do {
             key = CharUtil.getRandomString(20) + suffix;
-            storageInfo = litemallStorageService.findByKey(key);
+            storageInfo = mallStorageService.findByKey(key);
         }
         while (storageInfo != null);
 

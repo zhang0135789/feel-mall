@@ -4,11 +4,10 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.system.SystemConfig;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.service.LitemallSystemConfigService;
+import com.feel.mall.db.service.MallSystemConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class AdminConfigController {
     private final Log logger = LogFactory.getLog(AdminConfigController.class);
 
     @Autowired
-    private LitemallSystemConfigService systemConfigService;
+    private MallSystemConfigService systemConfigService;
 
     @RequiresPermissions("admin:config:mall:list")
     @RequiresPermissionsDesc(menu = {"配置管理", "商场配置"}, button = "详情")

@@ -4,12 +4,11 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallBrand;
-import com.feel.mall.db.service.LitemallBrandService;
+import com.feel.mall.db.domain.MallBrand;
+import com.feel.mall.db.service.MallBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,7 @@ public class AdminBrandController {
     private final Log logger = LogFactory.getLog(AdminBrandController.class);
 
     @Autowired
-    private LitemallBrandService brandService;
+    private MallBrandService brandService;
 
     @RequiresPermissions("admin:brand:list")
     @RequiresPermissionsDesc(menu = {"商场管理", "品牌管理"}, button = "查询")
@@ -36,11 +35,11 @@ public class AdminBrandController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallBrand> brandList = brandService.querySelective(id, name, page, limit, sort, order);
+        List<MallBrand> brandList = brandService.querySelective(id, name, page, limit, sort, order);
         return ResponseUtil.okList(brandList);
     }
 
-    private Object validate(LitemallBrand brand) {
+    private Object validate(MallBrand brand) {
         String name = brand.getName();
         if (StringUtils.isEmpty(name)) {
             return ResponseUtil.badArgument();
@@ -61,7 +60,7 @@ public class AdminBrandController {
     @RequiresPermissions("admin:brand:create")
     @RequiresPermissionsDesc(menu = {"商场管理", "品牌管理"}, button = "添加")
     @PostMapping("/create")
-    public Object create(@RequestBody LitemallBrand brand) {
+    public Object create(@RequestBody MallBrand brand) {
         Object error = validate(brand);
         if (error != null) {
             return error;
@@ -74,14 +73,14 @@ public class AdminBrandController {
     @RequiresPermissionsDesc(menu = {"商场管理", "品牌管理"}, button = "详情")
     @GetMapping("/read")
     public Object read(@NotNull Integer id) {
-        LitemallBrand brand = brandService.findById(id);
+        MallBrand brand = brandService.findById(id);
         return ResponseUtil.ok(brand);
     }
 
     @RequiresPermissions("admin:brand:update")
     @RequiresPermissionsDesc(menu = {"商场管理", "品牌管理"}, button = "编辑")
     @PostMapping("/update")
-    public Object update(@RequestBody LitemallBrand brand) {
+    public Object update(@RequestBody MallBrand brand) {
         Object error = validate(brand);
         if (error != null) {
             return error;
@@ -95,7 +94,7 @@ public class AdminBrandController {
     @RequiresPermissions("admin:brand:delete")
     @RequiresPermissionsDesc(menu = {"商场管理", "品牌管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallBrand brand) {
+    public Object delete(@RequestBody MallBrand brand) {
         Integer id = brand.getId();
         if (id == null) {
             return ResponseUtil.badArgument();

@@ -8,10 +8,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import com.feel.mall.core.util.bcrypt.BCryptPasswordEncoder;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.service.LitemallAdminService;
-import com.feel.mall.db.service.LitemallPermissionService;
-import com.feel.mall.db.service.LitemallRoleService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.service.MallAdminService;
+import com.feel.mall.db.service.MallPermissionService;
+import com.feel.mall.db.service.MallRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -22,11 +22,11 @@ import java.util.Set;
 public class AdminAuthorizingRealm extends AuthorizingRealm {
 
     @Autowired
-    private LitemallAdminService adminService;
+    private MallAdminService adminService;
     @Autowired
-    private LitemallRoleService roleService;
+    private MallRoleService roleService;
     @Autowired
-    private LitemallPermissionService permissionService;
+    private MallPermissionService permissionService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -34,7 +34,7 @@ public class AdminAuthorizingRealm extends AuthorizingRealm {
             throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
         }
 
-        LitemallAdmin admin = (LitemallAdmin) getAvailablePrincipal(principals);
+        MallAdmin admin = (MallAdmin) getAvailablePrincipal(principals);
         Integer[] roleIds = admin.getRoleIds();
         Set<String> roles = roleService.queryByIds(roleIds);
         Set<String> permissions = permissionService.queryByRoleIds(roleIds);
@@ -58,12 +58,12 @@ public class AdminAuthorizingRealm extends AuthorizingRealm {
             throw new AccountException("密码不能为空");
         }
 
-        List<LitemallAdmin> adminList = adminService.findAdmin(username);
+        List<MallAdmin> adminList = adminService.findAdmin(username);
         Assert.state(adminList.size() < 2, "同一个用户名存在两个账户");
         if (adminList.size() == 0) {
             throw new UnknownAccountException("找不到用户（" + username + "）的帐号信息");
         }
-        LitemallAdmin admin = adminList.get(0);
+        MallAdmin admin = adminList.get(0);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(password, admin.getPassword())) {

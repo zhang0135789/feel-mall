@@ -1,12 +1,11 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.domain.LitemallCoupon;
-import com.feel.mall.db.domain.LitemallCouponUser;
+import com.feel.mall.db.domain.MallCoupon;
+import com.feel.mall.db.domain.MallCouponUser;
 import com.feel.mall.db.util.CouponConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,9 +13,9 @@ import java.util.List;
 public class CouponAssignService {
 
     @Autowired
-    private LitemallCouponUserService couponUserService;
+    private MallCouponUserService mallCouponUserService;
     @Autowired
-    private LitemallCouponService couponService;
+    private MallCouponService mallCouponService;
 
     /**
      * 分发注册优惠券
@@ -25,18 +24,18 @@ public class CouponAssignService {
      * @return
      */
     public void assignForRegister(Integer userId) {
-        List<LitemallCoupon> couponList = couponService.queryRegister();
-        for(LitemallCoupon coupon : couponList){
+        List<MallCoupon> couponList = mallCouponService.queryRegister();
+        for(MallCoupon coupon : couponList){
             Integer couponId = coupon.getId();
 
-            Integer count = couponUserService.countUserAndCoupon(userId, couponId);
+            Integer count = mallCouponUserService.countUserAndCoupon(userId, couponId);
             if (count > 0) {
                 continue;
             }
 
             Short limit = coupon.getLimit();
             while(limit > 0){
-                LitemallCouponUser couponUser = new LitemallCouponUser();
+                MallCouponUser couponUser = new MallCouponUser();
                 couponUser.setCouponId(couponId);
                 couponUser.setUserId(userId);
                 Short timeType = coupon.getTimeType();
@@ -49,7 +48,7 @@ public class CouponAssignService {
                     couponUser.setStartTime(now);
                     couponUser.setEndTime(now.plusDays(coupon.getDays()));
                 }
-                couponUserService.add(couponUser);
+                mallCouponUserService.add(couponUser);
 
                 limit--;
             }

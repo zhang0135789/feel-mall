@@ -1,7 +1,7 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.domain.LitemallCoupon;
-import com.feel.mall.db.domain.LitemallCouponUser;
+import com.feel.mall.db.domain.MallCoupon;
+import com.feel.mall.db.domain.MallCouponUser;
 import com.feel.mall.db.util.CouponConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 public class CouponVerifyService {
 
     @Autowired
-    private LitemallCouponUserService couponUserService;
+    private MallCouponUserService mallCouponUserService;
     @Autowired
-    private LitemallCouponService couponService;
+    private MallCouponService mallCouponService;
 
     /**
      * 检测优惠券是否适合
@@ -25,9 +25,9 @@ public class CouponVerifyService {
      * @param checkedGoodsPrice
      * @return
      */
-    public LitemallCoupon checkCoupon(Integer userId, Integer couponId, BigDecimal checkedGoodsPrice) {
-        LitemallCoupon coupon = couponService.findById(couponId);
-        LitemallCouponUser couponUser = couponUserService.queryOne(userId, couponId);
+    public MallCoupon checkCoupon(Integer userId, Integer couponId, BigDecimal checkedGoodsPrice) {
+        MallCoupon coupon = mallCouponService.findById(couponId);
+        MallCouponUser couponUser = mallCouponUserService.queryOne(userId, couponId);
         if (coupon == null || couponUser == null) {
             return null;
         }

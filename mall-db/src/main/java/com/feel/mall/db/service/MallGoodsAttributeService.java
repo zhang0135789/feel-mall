@@ -1,9 +1,8 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallGoodsAttributeMapper;
-import com.feel.mall.db.dao.LitemallGoodsAttributeMapper;
-import com.feel.mall.db.domain.LitemallGoodsAttribute;
-import com.feel.mall.db.domain.LitemallGoodsAttributeExample;
+import com.feel.mall.db.dao.MallGoodsAttributeMapper;
+import com.feel.mall.db.domain.MallGoodsAttribute;
+import com.feel.mall.db.domain.MallGoodsAttributeExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,29 +10,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallGoodsAttributeService {
+public class MallGoodsAttributeService {
     @Resource
-    private LitemallGoodsAttributeMapper goodsAttributeMapper;
+    private MallGoodsAttributeMapper mallGoodsAttributeMapper;
 
-    public List<LitemallGoodsAttribute> queryByGid(Integer goodsId) {
-        LitemallGoodsAttributeExample example = new LitemallGoodsAttributeExample();
+    public List<MallGoodsAttribute> queryByGid(Integer goodsId) {
+        MallGoodsAttributeExample example = new MallGoodsAttributeExample();
         example.or().andGoodsIdEqualTo(goodsId).andDeletedEqualTo(false);
-        return goodsAttributeMapper.selectByExample(example);
+        return mallGoodsAttributeMapper.selectByExample(example);
     }
 
-    public void add(LitemallGoodsAttribute goodsAttribute) {
+    public void add(MallGoodsAttribute goodsAttribute) {
         goodsAttribute.setAddTime(LocalDateTime.now());
         goodsAttribute.setUpdateTime(LocalDateTime.now());
-        goodsAttributeMapper.insertSelective(goodsAttribute);
+        mallGoodsAttributeMapper.insertSelective(goodsAttribute);
     }
 
-    public LitemallGoodsAttribute findById(Integer id) {
-        return goodsAttributeMapper.selectByPrimaryKey(id);
+    public MallGoodsAttribute findById(Integer id) {
+        return mallGoodsAttributeMapper.selectByPrimaryKey(id);
     }
 
     public void deleteByGid(Integer gid) {
-        LitemallGoodsAttributeExample example = new LitemallGoodsAttributeExample();
+        MallGoodsAttributeExample example = new MallGoodsAttributeExample();
         example.or().andGoodsIdEqualTo(gid);
-        goodsAttributeMapper.logicalDeleteByExample(example);
+        mallGoodsAttributeMapper.logicalDeleteByExample(example);
     }
 }

@@ -1,10 +1,9 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallAddressMapper;
+import com.feel.mall.db.dao.MallAddressMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallAddressMapper;
-import com.feel.mall.db.domain.LitemallAddress;
-import com.feel.mall.db.domain.LitemallAddressExample;
+import com.feel.mall.db.domain.MallAddress;
+import com.feel.mall.db.domain.MallAddressExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,55 +12,55 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallAddressService {
+public class MallAddressService {
     @Resource
-    private LitemallAddressMapper addressMapper;
+    private MallAddressMapper mallAddressMapper;
 
-    public List<LitemallAddress> queryByUid(Integer uid) {
-        LitemallAddressExample example = new LitemallAddressExample();
+    public List<MallAddress> queryByUid(Integer uid) {
+        MallAddressExample example = new MallAddressExample();
         example.or().andUserIdEqualTo(uid).andDeletedEqualTo(false);
-        return addressMapper.selectByExample(example);
+        return mallAddressMapper.selectByExample(example);
     }
 
-    public LitemallAddress query(Integer userId, Integer id) {
-        LitemallAddressExample example = new LitemallAddressExample();
+    public MallAddress query(Integer userId, Integer id) {
+        MallAddressExample example = new MallAddressExample();
         example.or().andIdEqualTo(id).andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        return addressMapper.selectOneByExample(example);
+        return mallAddressMapper.selectOneByExample(example);
     }
 
-    public int add(LitemallAddress address) {
+    public int add(MallAddress address) {
         address.setAddTime(LocalDateTime.now());
         address.setUpdateTime(LocalDateTime.now());
-        return addressMapper.insertSelective(address);
+        return mallAddressMapper.insertSelective(address);
     }
 
-    public int update(LitemallAddress address) {
+    public int update(MallAddress address) {
         address.setUpdateTime(LocalDateTime.now());
-        return addressMapper.updateByPrimaryKeySelective(address);
+        return mallAddressMapper.updateByPrimaryKeySelective(address);
     }
 
     public void delete(Integer id) {
-        addressMapper.logicalDeleteByPrimaryKey(id);
+        mallAddressMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public LitemallAddress findDefault(Integer userId) {
-        LitemallAddressExample example = new LitemallAddressExample();
+    public MallAddress findDefault(Integer userId) {
+        MallAddressExample example = new MallAddressExample();
         example.or().andUserIdEqualTo(userId).andIsDefaultEqualTo(true).andDeletedEqualTo(false);
-        return addressMapper.selectOneByExample(example);
+        return mallAddressMapper.selectOneByExample(example);
     }
 
     public void resetDefault(Integer userId) {
-        LitemallAddress address = new LitemallAddress();
+        MallAddress address = new MallAddress();
         address.setIsDefault(false);
         address.setUpdateTime(LocalDateTime.now());
-        LitemallAddressExample example = new LitemallAddressExample();
+        MallAddressExample example = new MallAddressExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        addressMapper.updateByExampleSelective(address, example);
+        mallAddressMapper.updateByExampleSelective(address, example);
     }
 
-    public List<LitemallAddress> querySelective(Integer userId, String name, Integer page, Integer limit, String sort, String order) {
-        LitemallAddressExample example = new LitemallAddressExample();
-        LitemallAddressExample.Criteria criteria = example.createCriteria();
+    public List<MallAddress> querySelective(Integer userId, String name, Integer page, Integer limit, String sort, String order) {
+        MallAddressExample example = new MallAddressExample();
+        MallAddressExample.Criteria criteria = example.createCriteria();
 
         if (userId != null) {
             criteria.andUserIdEqualTo(userId);
@@ -76,6 +75,6 @@ public class LitemallAddressService {
         }
 
         PageHelper.startPage(page, limit);
-        return addressMapper.selectByExample(example);
+        return mallAddressMapper.selectByExample(example);
     }
 }

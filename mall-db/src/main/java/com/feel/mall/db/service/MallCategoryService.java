@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallCategoryMapper;
-import com.feel.mall.db.domain.LitemallCategory;
-import com.feel.mall.db.domain.LitemallCategoryExample;
+import com.feel.mall.db.dao.MallCategoryMapper;
+import com.feel.mall.db.domain.MallCategory;
+import com.feel.mall.db.domain.MallCategoryExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,50 +12,50 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallCategoryService {
+public class MallCategoryService {
     @Resource
-    private LitemallCategoryMapper categoryMapper;
-    private LitemallCategory.Column[] CHANNEL = {LitemallCategory.Column.id, LitemallCategory.Column.name, LitemallCategory.Column.iconUrl};
+    private MallCategoryMapper mallCategoryMapper;
+    private MallCategory.Column[] CHANNEL = {MallCategory.Column.id, MallCategory.Column.name, MallCategory.Column.iconUrl};
 
-    public List<LitemallCategory> queryL1WithoutRecommend(int offset, int limit) {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryL1WithoutRecommend(int offset, int limit) {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andLevelEqualTo("L1").andNameNotEqualTo("推荐").andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public List<LitemallCategory> queryL1(int offset, int limit) {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryL1(int offset, int limit) {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public List<LitemallCategory> queryL1() {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryL1() {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public List<LitemallCategory> queryByPid(Integer pid) {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryByPid(Integer pid) {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andPidEqualTo(pid).andDeletedEqualTo(false);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public List<LitemallCategory> queryL2ByIds(List<Integer> ids) {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryL2ByIds(List<Integer> ids) {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andIdIn(ids).andLevelEqualTo("L2").andDeletedEqualTo(false);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public LitemallCategory findById(Integer id) {
-        return categoryMapper.selectByPrimaryKey(id);
+    public MallCategory findById(Integer id) {
+        return mallCategoryMapper.selectByPrimaryKey(id);
     }
 
-    public List<LitemallCategory> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
-        LitemallCategoryExample example = new LitemallCategoryExample();
-        LitemallCategoryExample.Criteria criteria = example.createCriteria();
+    public List<MallCategory> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
+        MallCategoryExample example = new MallCategoryExample();
+        MallCategoryExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(id)) {
             criteria.andIdEqualTo(Integer.valueOf(id));
@@ -70,27 +70,27 @@ public class LitemallCategoryService {
         }
 
         PageHelper.startPage(page, size);
-        return categoryMapper.selectByExample(example);
+        return mallCategoryMapper.selectByExample(example);
     }
 
-    public int updateById(LitemallCategory category) {
+    public int updateById(MallCategory category) {
         category.setUpdateTime(LocalDateTime.now());
-        return categoryMapper.updateByPrimaryKeySelective(category);
+        return mallCategoryMapper.updateByPrimaryKeySelective(category);
     }
 
     public void deleteById(Integer id) {
-        categoryMapper.logicalDeleteByPrimaryKey(id);
+        mallCategoryMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallCategory category) {
+    public void add(MallCategory category) {
         category.setAddTime(LocalDateTime.now());
         category.setUpdateTime(LocalDateTime.now());
-        categoryMapper.insertSelective(category);
+        mallCategoryMapper.insertSelective(category);
     }
 
-    public List<LitemallCategory> queryChannel() {
-        LitemallCategoryExample example = new LitemallCategoryExample();
+    public List<MallCategory> queryChannel() {
+        MallCategoryExample example = new MallCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
-        return categoryMapper.selectByExampleSelective(example, CHANNEL);
+        return mallCategoryMapper.selectByExampleSelective(example, CHANNEL);
     }
 }

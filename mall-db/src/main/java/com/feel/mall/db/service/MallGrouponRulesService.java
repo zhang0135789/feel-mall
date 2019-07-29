@@ -2,32 +2,29 @@ package com.feel.mall.db.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallGoodsMapper;
-import com.feel.mall.db.dao.LitemallGrouponRulesMapper;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.domain.LitemallGrouponRules;
-import com.feel.mall.db.domain.LitemallGrouponRulesExample;
+import com.feel.mall.db.dao.MallGoodsMapper;
+import com.feel.mall.db.dao.MallGrouponRulesMapper;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.domain.MallGrouponRules;
+import com.feel.mall.db.domain.MallGrouponRulesExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class LitemallGrouponRulesService {
+public class MallGrouponRulesService {
     @Resource
-    private LitemallGrouponRulesMapper mapper;
+    private MallGrouponRulesMapper mallGrouponRulesMapper;
     @Resource
-    private LitemallGoodsMapper goodsMapper;
-    private LitemallGoods.Column[] goodsColumns = new LitemallGoods.Column[]{LitemallGoods.Column.id, LitemallGoods.Column.name, LitemallGoods.Column.brief, LitemallGoods.Column.picUrl, LitemallGoods.Column.counterPrice, LitemallGoods.Column.retailPrice};
+    private MallGoodsMapper mallGoodsMapper;
+    private MallGoods.Column[] goodsColumns = new MallGoods.Column[]{MallGoods.Column.id, MallGoods.Column.name, MallGoods.Column.brief, MallGoods.Column.picUrl, MallGoods.Column.counterPrice, MallGoods.Column.retailPrice};
 
-    public int createRules(LitemallGrouponRules rules) {
+    public int createRules(MallGrouponRules rules) {
         rules.setAddTime(LocalDateTime.now());
         rules.setUpdateTime(LocalDateTime.now());
-        return mapper.insertSelective(rules);
+        return mallGrouponRulesMapper.insertSelective(rules);
     }
 
     /**
@@ -36,10 +33,10 @@ public class LitemallGrouponRulesService {
      * @param id
      * @return
      */
-    public LitemallGrouponRules queryById(Integer id) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
+    public MallGrouponRules queryById(Integer id) {
+        MallGrouponRulesExample example = new MallGrouponRulesExample();
         example.or().andIdEqualTo(id).andDeletedEqualTo(false);
-        return mapper.selectOneByExample(example);
+        return mallGrouponRulesMapper.selectOneByExample(example);
     }
 
     /**
@@ -48,10 +45,10 @@ public class LitemallGrouponRulesService {
      * @param goodsId
      * @return
      */
-    public List<LitemallGrouponRules> queryByGoodsId(Integer goodsId) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
+    public List<MallGrouponRules> queryByGoodsId(Integer goodsId) {
+        MallGrouponRulesExample example = new MallGrouponRulesExample();
         example.or().andGoodsIdEqualTo(goodsId).andDeletedEqualTo(false);
-        return mapper.selectByExample(example);
+        return mallGrouponRulesMapper.selectByExample(example);
     }
 
     /**
@@ -61,16 +58,16 @@ public class LitemallGrouponRulesService {
      * @param limit
      * @return
      */
-    public List<LitemallGrouponRules> queryList(Integer page, Integer limit) {
+    public List<MallGrouponRules> queryList(Integer page, Integer limit) {
         return queryList(page, limit, "add_time", "desc");
     }
 
-    public List<LitemallGrouponRules> queryList(Integer page, Integer limit, String sort, String order) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
+    public List<MallGrouponRules> queryList(Integer page, Integer limit, String sort, String order) {
+        MallGrouponRulesExample example = new MallGrouponRulesExample();
         example.or().andDeletedEqualTo(false);
         example.setOrderByClause(sort + " " + order);
         PageHelper.startPage(page, limit);
-        return mapper.selectByExample(example);
+        return mallGrouponRulesMapper.selectByExample(example);
     }
 
     /**
@@ -78,7 +75,7 @@ public class LitemallGrouponRulesService {
      *
      * @return
      */
-    public boolean isExpired(LitemallGrouponRules rules) {
+    public boolean isExpired(MallGrouponRules rules) {
         return (rules == null || rules.getExpireTime().isBefore(LocalDateTime.now()));
     }
 
@@ -92,11 +89,11 @@ public class LitemallGrouponRulesService {
      * @param order
      * @return
      */
-    public List<LitemallGrouponRules> querySelective(String goodsId, Integer page, Integer size, String sort, String order) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
+    public List<MallGrouponRules> querySelective(String goodsId, Integer page, Integer size, String sort, String order) {
+        MallGrouponRulesExample example = new MallGrouponRulesExample();
         example.setOrderByClause(sort + " " + order);
 
-        LitemallGrouponRulesExample.Criteria criteria = example.createCriteria();
+        MallGrouponRulesExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(goodsId)) {
             criteria.andGoodsIdEqualTo(Integer.parseInt(goodsId));
@@ -104,15 +101,15 @@ public class LitemallGrouponRulesService {
         criteria.andDeletedEqualTo(false);
 
         PageHelper.startPage(page, size);
-        return mapper.selectByExample(example);
+        return mallGrouponRulesMapper.selectByExample(example);
     }
 
     public void delete(Integer id) {
-        mapper.logicalDeleteByPrimaryKey(id);
+        mallGrouponRulesMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public int updateById(LitemallGrouponRules grouponRules) {
+    public int updateById(MallGrouponRules grouponRules) {
         grouponRules.setUpdateTime(LocalDateTime.now());
-        return mapper.updateByPrimaryKeySelective(grouponRules);
+        return mallGrouponRulesMapper.updateByPrimaryKeySelective(grouponRules);
     }
 }

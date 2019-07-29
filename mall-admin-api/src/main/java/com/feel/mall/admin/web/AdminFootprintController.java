@@ -7,8 +7,8 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallFootprint;
-import com.feel.mall.db.service.LitemallFootprintService;
+import com.feel.mall.db.domain.MallFootprint;
+import com.feel.mall.db.service.MallFootprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public class AdminFootprintController {
     private final Log logger = LogFactory.getLog(AdminFootprintController.class);
 
     @Autowired
-    private LitemallFootprintService footprintService;
+    private MallFootprintService footprintService;
 
     @RequiresPermissions("admin:footprint:list")
     @RequiresPermissionsDesc(menu = {"用户管理", "用户足迹"}, button = "查询")
@@ -35,7 +35,7 @@ public class AdminFootprintController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallFootprint> footprintList = footprintService.querySelective(userId, goodsId, page, limit, sort,
+        List<MallFootprint> footprintList = footprintService.querySelective(userId, goodsId, page, limit, sort,
                 order);
         return ResponseUtil.okList(footprintList);
     }

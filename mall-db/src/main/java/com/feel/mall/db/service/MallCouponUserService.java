@@ -1,10 +1,9 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallCouponUserMapper;
+import com.feel.mall.db.dao.MallCouponUserMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallCouponUserMapper;
-import com.feel.mall.db.domain.LitemallCouponUser;
-import com.feel.mall.db.domain.LitemallCouponUserExample;
+import com.feel.mall.db.domain.MallCouponUser;
+import com.feel.mall.db.domain.MallCouponUserExample;
 import com.feel.mall.db.util.CouponUserConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,31 +13,31 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallCouponUserService {
+public class MallCouponUserService {
     @Resource
-    private LitemallCouponUserMapper couponUserMapper;
+    private MallCouponUserMapper mallCouponUserMapper;
 
     public Integer countCoupon(Integer couponId) {
-        LitemallCouponUserExample example = new LitemallCouponUserExample();
+        MallCouponUserExample example = new MallCouponUserExample();
         example.or().andCouponIdEqualTo(couponId).andDeletedEqualTo(false);
-        return (int)couponUserMapper.countByExample(example);
+        return (int)mallCouponUserMapper.countByExample(example);
     }
 
     public Integer countUserAndCoupon(Integer userId, Integer couponId) {
-        LitemallCouponUserExample example = new LitemallCouponUserExample();
+        MallCouponUserExample example = new MallCouponUserExample();
         example.or().andUserIdEqualTo(userId).andCouponIdEqualTo(couponId).andDeletedEqualTo(false);
-        return (int)couponUserMapper.countByExample(example);
+        return (int)mallCouponUserMapper.countByExample(example);
     }
 
-    public void add(LitemallCouponUser couponUser) {
+    public void add(MallCouponUser couponUser) {
         couponUser.setAddTime(LocalDateTime.now());
         couponUser.setUpdateTime(LocalDateTime.now());
-        couponUserMapper.insertSelective(couponUser);
+        mallCouponUserMapper.insertSelective(couponUser);
     }
 
-    public List<LitemallCouponUser> queryList(Integer userId, Integer couponId, Short status, Integer page, Integer size, String sort, String order) {
-        LitemallCouponUserExample example = new LitemallCouponUserExample();
-        LitemallCouponUserExample.Criteria criteria = example.createCriteria();
+    public List<MallCouponUser> queryList(Integer userId, Integer couponId, Short status, Integer page, Integer size, String sort, String order) {
+        MallCouponUserExample example = new MallCouponUserExample();
+        MallCouponUserExample.Criteria criteria = example.createCriteria();
         if (userId != null) {
             criteria.andUserIdEqualTo(userId);
         }
@@ -58,38 +57,38 @@ public class LitemallCouponUserService {
             PageHelper.startPage(page, size);
         }
 
-        return couponUserMapper.selectByExample(example);
+        return mallCouponUserMapper.selectByExample(example);
     }
 
-    public List<LitemallCouponUser> queryAll(Integer userId, Integer couponId) {
+    public List<MallCouponUser> queryAll(Integer userId, Integer couponId) {
         return queryList(userId, couponId, CouponUserConstant.STATUS_USABLE, null, null, "add_time", "desc");
     }
 
-    public List<LitemallCouponUser> queryAll(Integer userId) {
+    public List<MallCouponUser> queryAll(Integer userId) {
         return queryList(userId, null, CouponUserConstant.STATUS_USABLE, null, null, "add_time", "desc");
     }
 
-    public LitemallCouponUser queryOne(Integer userId, Integer couponId) {
-        List<LitemallCouponUser> couponUserList = queryList(userId, couponId, CouponUserConstant.STATUS_USABLE, 1, 1, "add_time", "desc");
+    public MallCouponUser queryOne(Integer userId, Integer couponId) {
+        List<MallCouponUser> couponUserList = queryList(userId, couponId, CouponUserConstant.STATUS_USABLE, 1, 1, "add_time", "desc");
         if(couponUserList.size() == 0){
             return null;
         }
         return couponUserList.get(0);
     }
 
-    public LitemallCouponUser findById(Integer id) {
-        return couponUserMapper.selectByPrimaryKey(id);
+    public MallCouponUser findById(Integer id) {
+        return mallCouponUserMapper.selectByPrimaryKey(id);
     }
 
 
-    public int update(LitemallCouponUser couponUser) {
+    public int update(MallCouponUser couponUser) {
         couponUser.setUpdateTime(LocalDateTime.now());
-        return couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        return mallCouponUserMapper.updateByPrimaryKeySelective(couponUser);
     }
 
-    public List<LitemallCouponUser> queryExpired() {
-        LitemallCouponUserExample example = new LitemallCouponUserExample();
+    public List<MallCouponUser> queryExpired() {
+        MallCouponUserExample example = new MallCouponUserExample();
         example.or().andStatusEqualTo(CouponUserConstant.STATUS_USABLE).andEndTimeLessThan(LocalDateTime.now()).andDeletedEqualTo(false);
-        return couponUserMapper.selectByExample(example);
+        return mallCouponUserMapper.selectByExample(example);
     }
 }

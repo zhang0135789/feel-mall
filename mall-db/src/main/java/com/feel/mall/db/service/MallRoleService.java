@@ -2,9 +2,9 @@ package com.feel.mall.db.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallRoleMapper;
-import com.feel.mall.db.domain.LitemallRole;
-import com.feel.mall.db.domain.LitemallRoleExample;
+import com.feel.mall.db.dao.MallRoleMapper;
+import com.feel.mall.db.domain.MallRole;
+import com.feel.mall.db.domain.MallRoleExample;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class LitemallRoleService {
+public class MallRoleService {
     @Resource
-    private LitemallRoleMapper roleMapper;
+    private MallRoleMapper mallRoleMapper;
 
 
     public Set<String> queryByIds(Integer[] roleIds) {
@@ -25,11 +25,11 @@ public class LitemallRoleService {
             return roles;
         }
 
-        LitemallRoleExample example = new LitemallRoleExample();
+        MallRoleExample example = new MallRoleExample();
         example.or().andIdIn(Arrays.asList(roleIds)).andEnabledEqualTo(true).andDeletedEqualTo(false);
-        List<LitemallRole> roleList = roleMapper.selectByExample(example);
+        List<MallRole> roleList = mallRoleMapper.selectByExample(example);
 
-        for(LitemallRole role : roleList){
+        for(MallRole role : roleList){
             roles.add(role.getName());
         }
 
@@ -37,9 +37,9 @@ public class LitemallRoleService {
 
     }
 
-    public List<LitemallRole> querySelective(String name, Integer page, Integer limit, String sort, String order) {
-        LitemallRoleExample example = new LitemallRoleExample();
-        LitemallRoleExample.Criteria criteria = example.createCriteria();
+    public List<MallRole> querySelective(String name, Integer page, Integer limit, String sort, String order) {
+        MallRoleExample example = new MallRoleExample();
+        MallRoleExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
@@ -51,37 +51,37 @@ public class LitemallRoleService {
         }
 
         PageHelper.startPage(page, limit);
-        return roleMapper.selectByExample(example);
+        return mallRoleMapper.selectByExample(example);
     }
 
-    public LitemallRole findById(Integer id) {
-        return roleMapper.selectByPrimaryKey(id);
+    public MallRole findById(Integer id) {
+        return mallRoleMapper.selectByPrimaryKey(id);
     }
 
-    public void add(LitemallRole role) {
+    public void add(MallRole role) {
         role.setAddTime(LocalDateTime.now());
         role.setUpdateTime(LocalDateTime.now());
-        roleMapper.insertSelective(role);
+        mallRoleMapper.insertSelective(role);
     }
 
     public void deleteById(Integer id) {
-        roleMapper.logicalDeleteByPrimaryKey(id);
+        mallRoleMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void updateById(LitemallRole role) {
+    public void updateById(MallRole role) {
         role.setUpdateTime(LocalDateTime.now());
-        roleMapper.updateByPrimaryKeySelective(role);
+        mallRoleMapper.updateByPrimaryKeySelective(role);
     }
 
     public boolean checkExist(String name) {
-        LitemallRoleExample example = new LitemallRoleExample();
+        MallRoleExample example = new MallRoleExample();
         example.or().andNameEqualTo(name).andDeletedEqualTo(false);
-        return roleMapper.countByExample(example) != 0;
+        return mallRoleMapper.countByExample(example) != 0;
     }
 
-    public List<LitemallRole> queryAll() {
-        LitemallRoleExample example = new LitemallRoleExample();
+    public List<MallRole> queryAll() {
+        MallRoleExample example = new MallRoleExample();
         example.or().andDeletedEqualTo(false);
-        return roleMapper.selectByExample(example);
+        return mallRoleMapper.selectByExample(example);
     }
 }

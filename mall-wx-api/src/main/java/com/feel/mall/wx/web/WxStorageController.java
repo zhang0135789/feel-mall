@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.storage.StorageService;
 import com.feel.mall.core.util.CharUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallStorage;
-import com.feel.mall.db.service.LitemallStorageService;
+import com.feel.mall.db.domain.MallStorage;
+import com.feel.mall.db.service.MallStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 对象存储服务
@@ -32,18 +30,18 @@ public class WxStorageController {
     @Autowired
     private StorageService storageService;
     @Autowired
-    private LitemallStorageService litemallStorageService;
+    private MallStorageService mallStorageService;
 
     private String generateKey(String originalFilename) {
         int index = originalFilename.lastIndexOf('.');
         String suffix = originalFilename.substring(index);
 
         String key = null;
-        LitemallStorage storageInfo = null;
+        MallStorage storageInfo = null;
 
         do {
             key = CharUtil.getRandomString(20) + suffix;
-            storageInfo = litemallStorageService.findByKey(key);
+            storageInfo = mallStorageService.findByKey(key);
         }
         while (storageInfo != null);
 
@@ -53,8 +51,8 @@ public class WxStorageController {
     @PostMapping("/upload")
     public Object upload(@RequestParam("file") MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
-        LitemallStorage litemallStorage = storageService.store(file.getInputStream(), file.getSize(), file.getContentType(), originalFilename);
-        return ResponseUtil.ok(litemallStorage);
+        MallStorage mallStorage = storageService.store(file.getInputStream(), file.getSize(), file.getContentType(), originalFilename);
+        return ResponseUtil.ok(mallStorage);
     }
 
     /**
@@ -65,14 +63,14 @@ public class WxStorageController {
      */
     @GetMapping("/fetch/{key:.+}")
     public ResponseEntity<Resource> fetch(@PathVariable String key) {
-        LitemallStorage litemallStorage = litemallStorageService.findByKey(key);
+        MallStorage mallStorage = mallStorageService.findByKey(key);
         if (key == null) {
             return ResponseEntity.notFound().build();
         }
         if (key.contains("../")) {
             return ResponseEntity.badRequest().build();
         }
-        String type = litemallStorage.getType();
+        String type = mallStorage.getType();
         MediaType mediaType = MediaType.parseMediaType(type);
 
         Resource file = storageService.loadAsResource(key);
@@ -90,7 +88,7 @@ public class WxStorageController {
      */
     @GetMapping("/download/{key:.+}")
     public ResponseEntity<Resource> download(@PathVariable String key) {
-        LitemallStorage litemallStorage = litemallStorageService.findByKey(key);
+        MallStorage mallStorage = mallStorageService.findByKey(key);
         if (key == null) {
             return ResponseEntity.notFound().build();
         }
@@ -98,7 +96,7 @@ public class WxStorageController {
             return ResponseEntity.badRequest().build();
         }
 
-        String type = litemallStorage.getType();
+        String type = mallStorage.getType();
         MediaType mediaType = MediaType.parseMediaType(type);
 
         Resource file = storageService.loadAsResource(key);

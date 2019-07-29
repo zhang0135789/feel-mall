@@ -13,8 +13,8 @@ import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.util.bcrypt.BCryptPasswordEncoder;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.service.LitemallAdminService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.service.MallAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -30,7 +30,7 @@ public class AdminAdminController {
     private final Log logger = LogFactory.getLog(AdminAdminController.class);
 
     @Autowired
-    private LitemallAdminService adminService;
+    private MallAdminService adminService;
     @Autowired
     private LogHelper logHelper;
 
@@ -42,11 +42,11 @@ public class AdminAdminController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallAdmin> adminList = adminService.querySelective(username, page, limit, sort, order);
+        List<MallAdmin> adminList = adminService.querySelective(username, page, limit, sort, order);
         return ResponseUtil.okList(adminList);
     }
 
-    private Object validate(LitemallAdmin admin) {
+    private Object validate(MallAdmin admin) {
         String name = admin.getUsername();
         if (StringUtils.isEmpty(name)) {
             return ResponseUtil.badArgument();
@@ -64,14 +64,14 @@ public class AdminAdminController {
     @RequiresPermissions("admin:admin:create")
     @RequiresPermissionsDesc(menu = {"系统管理", "管理员管理"}, button = "添加")
     @PostMapping("/create")
-    public Object create(@RequestBody LitemallAdmin admin) {
+    public Object create(@RequestBody MallAdmin admin) {
         Object error = validate(admin);
         if (error != null) {
             return error;
         }
 
         String username = admin.getUsername();
-        List<LitemallAdmin> adminList = adminService.findAdmin(username);
+        List<MallAdmin> adminList = adminService.findAdmin(username);
         if (adminList.size() > 0) {
             return ResponseUtil.fail(AdminResponseCode.ADMIN_NAME_EXIST, "管理员已经存在");
         }
@@ -89,14 +89,14 @@ public class AdminAdminController {
     @RequiresPermissionsDesc(menu = {"系统管理", "管理员管理"}, button = "详情")
     @GetMapping("/read")
     public Object read(@NotNull Integer id) {
-        LitemallAdmin admin = adminService.findById(id);
+        MallAdmin admin = adminService.findById(id);
         return ResponseUtil.ok(admin);
     }
 
     @RequiresPermissions("admin:admin:update")
     @RequiresPermissionsDesc(menu = {"系统管理", "管理员管理"}, button = "编辑")
     @PostMapping("/update")
-    public Object update(@RequestBody LitemallAdmin admin) {
+    public Object update(@RequestBody MallAdmin admin) {
         Object error = validate(admin);
         if (error != null) {
             return error;
@@ -121,7 +121,7 @@ public class AdminAdminController {
     @RequiresPermissions("admin:admin:delete")
     @RequiresPermissionsDesc(menu = {"系统管理", "管理员管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallAdmin admin) {
+    public Object delete(@RequestBody MallAdmin admin) {
         Integer anotherAdminId = admin.getId();
         if (anotherAdminId == null) {
             return ResponseUtil.badArgument();
@@ -129,7 +129,7 @@ public class AdminAdminController {
 
         // 管理员不能删除自身账号
         Subject currentUser = SecurityUtils.getSubject();
-        LitemallAdmin currentAdmin = (LitemallAdmin) currentUser.getPrincipal();
+        MallAdmin currentAdmin = (MallAdmin) currentUser.getPrincipal();
         if (currentAdmin.getId().equals(anotherAdminId)) {
             return ResponseUtil.fail(AdminResponseCode.ADMIN_DELETE_NOT_ALLOWED, "管理员不能删除自己账号");
         }

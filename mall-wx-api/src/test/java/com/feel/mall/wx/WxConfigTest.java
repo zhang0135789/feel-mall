@@ -26,7 +26,7 @@ public class WxConfigTest {
         // 测试获取application-wx.yml配置信息
         System.out.println(environment.getProperty("litemall.wx.notify-url"));
         // 测试获取application.yml配置信息
-        System.out.println(environment.getProperty("logging.level.org.linlinjava.litemall.wx"));
+        System.out.println(environment.getProperty("logging.level.com.feel.mall.wx"));
     }
 
 }

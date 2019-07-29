@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallKeywordMapper;
-import com.feel.mall.db.domain.LitemallKeyword;
-import com.feel.mall.db.domain.LitemallKeywordExample;
+import com.feel.mall.db.dao.MallKeywordMapper;
+import com.feel.mall.db.domain.MallKeyword;
+import com.feel.mall.db.domain.MallKeywordExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,33 +12,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallKeywordService {
+public class MallKeywordService {
     @Resource
-    private LitemallKeywordMapper keywordsMapper;
+    private MallKeywordMapper mallKeywordMapper;
 
-    public LitemallKeyword queryDefault() {
-        LitemallKeywordExample example = new LitemallKeywordExample();
+    public MallKeyword queryDefault() {
+        MallKeywordExample example = new MallKeywordExample();
         example.or().andIsDefaultEqualTo(true).andDeletedEqualTo(false);
-        return keywordsMapper.selectOneByExample(example);
+        return mallKeywordMapper.selectOneByExample(example);
     }
 
-    public List<LitemallKeyword> queryHots() {
-        LitemallKeywordExample example = new LitemallKeywordExample();
+    public List<MallKeyword> queryHots() {
+        MallKeywordExample example = new MallKeywordExample();
         example.or().andIsHotEqualTo(true).andDeletedEqualTo(false);
-        return keywordsMapper.selectByExample(example);
+        return mallKeywordMapper.selectByExample(example);
     }
 
-    public List<LitemallKeyword> queryByKeyword(String keyword, Integer page, Integer limit) {
-        LitemallKeywordExample example = new LitemallKeywordExample();
+    public List<MallKeyword> queryByKeyword(String keyword, Integer page, Integer limit) {
+        MallKeywordExample example = new MallKeywordExample();
         example.setDistinct(true);
         example.or().andKeywordLike("%" + keyword + "%").andDeletedEqualTo(false);
         PageHelper.startPage(page, limit);
-        return keywordsMapper.selectByExampleSelective(example, LitemallKeyword.Column.keyword);
+        return mallKeywordMapper.selectByExampleSelective(example, MallKeyword.Column.keyword);
     }
 
-    public List<LitemallKeyword> querySelective(String keyword, String url, Integer page, Integer limit, String sort, String order) {
-        LitemallKeywordExample example = new LitemallKeywordExample();
-        LitemallKeywordExample.Criteria criteria = example.createCriteria();
+    public List<MallKeyword> querySelective(String keyword, String url, Integer page, Integer limit, String sort, String order) {
+        MallKeywordExample example = new MallKeywordExample();
+        MallKeywordExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(keyword)) {
             criteria.andKeywordLike("%" + keyword + "%");
@@ -53,25 +53,25 @@ public class LitemallKeywordService {
         }
 
         PageHelper.startPage(page, limit);
-        return keywordsMapper.selectByExample(example);
+        return mallKeywordMapper.selectByExample(example);
     }
 
-    public void add(LitemallKeyword keywords) {
+    public void add(MallKeyword keywords) {
         keywords.setAddTime(LocalDateTime.now());
         keywords.setUpdateTime(LocalDateTime.now());
-        keywordsMapper.insertSelective(keywords);
+        mallKeywordMapper.insertSelective(keywords);
     }
 
-    public LitemallKeyword findById(Integer id) {
-        return keywordsMapper.selectByPrimaryKey(id);
+    public MallKeyword findById(Integer id) {
+        return mallKeywordMapper.selectByPrimaryKey(id);
     }
 
-    public int updateById(LitemallKeyword keywords) {
+    public int updateById(MallKeyword keywords) {
         keywords.setUpdateTime(LocalDateTime.now());
-        return keywordsMapper.updateByPrimaryKeySelective(keywords);
+        return mallKeywordMapper.updateByPrimaryKeySelective(keywords);
     }
 
     public void deleteById(Integer id) {
-        keywordsMapper.logicalDeleteByPrimaryKey(id);
+        mallKeywordMapper.logicalDeleteByPrimaryKey(id);
     }
 }

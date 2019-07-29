@@ -4,11 +4,10 @@ import com.feel.mall.wx.annotation.LoginUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallKeyword;
-import com.feel.mall.db.domain.LitemallSearchHistory;
-import com.feel.mall.db.service.LitemallKeywordService;
-import com.feel.mall.db.service.LitemallSearchHistoryService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallKeyword;
+import com.feel.mall.db.domain.MallSearchHistory;
+import com.feel.mall.db.service.MallKeywordService;
+import com.feel.mall.db.service.MallSearchHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +30,9 @@ public class WxSearchController {
     private final Log logger = LogFactory.getLog(WxSearchController.class);
 
     @Autowired
-    private LitemallKeywordService keywordsService;
+    private MallKeywordService keywordsService;
     @Autowired
-    private LitemallSearchHistoryService searchHistoryService;
+    private MallSearchHistoryService searchHistoryService;
 
     /**
      * 搜索页面信息
@@ -47,11 +46,11 @@ public class WxSearchController {
     @GetMapping("index")
     public Object index(@LoginUser Integer userId) {
         //取出输入框默认的关键词
-        LitemallKeyword defaultKeyword = keywordsService.queryDefault();
+        MallKeyword defaultKeyword = keywordsService.queryDefault();
         //取出热闹关键词
-        List<LitemallKeyword> hotKeywordList = keywordsService.queryHots();
+        List<MallKeyword> hotKeywordList = keywordsService.queryHots();
 
-        List<LitemallSearchHistory> historyList = null;
+        List<MallSearchHistory> historyList = null;
         if (userId != null) {
             //取出用户历史关键字
             historyList = searchHistoryService.queryByUid(userId);
@@ -78,10 +77,10 @@ public class WxSearchController {
     public Object helper(@NotEmpty String keyword,
                          @RequestParam(defaultValue = "1") Integer page,
                          @RequestParam(defaultValue = "10") Integer limit) {
-        List<LitemallKeyword> keywordsList = keywordsService.queryByKeyword(keyword, page, limit);
+        List<MallKeyword> keywordsList = keywordsService.queryByKeyword(keyword, page, limit);
         String[] keys = new String[keywordsList.size()];
         int index = 0;
-        for (LitemallKeyword key : keywordsList) {
+        for (MallKeyword key : keywordsList) {
             keys[index++] = key.getKeyword();
         }
         return ResponseUtil.ok(keys);

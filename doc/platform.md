@@ -583,15 +583,15 @@ mybatis数据库访问代码是指dao接口代码、dao数据库XML文件和doma
 1. 读取`mybatis-generator`文件夹下的`generatorConfig.xml`文件
 2. 根据`jdbcConnection`访问数据库
 3. 根据`table`, 自动生成三种代码:
-   * src文件夹`org.linlinjava.litemall.db.dao` 包内的Java代码
-   * src文件夹`org.linlinjava.litemall.db.domain` 包内的Java代码
-   * resources文件夹`org.linlinjava.litemall.db.domain.dao` 内的XML文件
+   * src文件夹`com.feel.mall.db.dao` 包内的Java代码
+   * src文件夹`com.feel.mall.db.domain` 包内的Java代码
+   * resources文件夹`com.feel.mall.db.domain.dao` 内的XML文件
 
 以上三种代码即可封装对数据库的操作，开发者无需直接操作sql代码，
 而是直接操作Java代码来完成对数据库的访问处理。
 
 关于如何基于mybatis的Example代码来访问数据库，请查阅相关资料，
-或者参考本模块`org.linlinjava.litemall.db.service` 包内的Java代码。
+或者参考本模块`com.feel.mall.db.service` 包内的Java代码。
 
 当然，为了达到数据库访问效率，开发者也可以手动自定义mapper文件和对应的Java代码。
 例如，当需要访问两个表的数据时，这里是在业务层通过Java代码遍历的形式来访问两个表，
@@ -643,20 +643,20 @@ mybatis数据库访问代码是指dao接口代码、dao数据库XML文件和doma
 
 1. dao代码
 
-   在src文件夹`org.linlinjava.litemall.db.domain` 包内的StatMapper.java代码定义了数据库访问的接口
+   在src文件夹`com.feel.mall.db.domain` 包内的StatMapper.java代码定义了数据库访问的接口
 
 2. domain代码
  
-   如果希望数据库操作返回数据模型，可以在src文件夹`org.linlinjava.litemall.db.domain` 包内创建相应代码。
+   如果希望数据库操作返回数据模型，可以在src文件夹`com.feel.mall.db.domain` 包内创建相应代码。
    而这里统计功能是采用简化的`List<Map>`保存数据，没有定义domain代码。
 
 3. XML文件
 
-   在resources文件夹`org.linlinjava.litemall.db.domain.dao` 内的StatMapper.xml文件则是实现真正的数据库访问操作。
+   在resources文件夹`com.feel.mall.db.domain.dao` 内的StatMapper.xml文件则是实现真正的数据库访问操作。
 
 4. service代码
 
-   这里可以在`org.linlinjava.litemall.db.service` 内定义一个StatServie.java代码，调用底层mapper代码，对外服务。
+   这里可以在`com.feel.mall.db.service` 内定义一个StatServie.java代码，调用底层mapper代码，对外服务。
     ```
     @Service
     public class StatService {
@@ -685,7 +685,7 @@ mybatis数据库访问代码是指dao接口代码、dao数据库XML文件和doma
 需要指出的是，这里的业务代码往往是单表相关的业务代码，而涉及到多表操作的java代码通常是在其他高层模块中实现。
 这里的业务分层并不是绝对的。例如，开发者可以取消这里的业务代码，而在其他模块中直接调用2.2.1所述代码。
 
-通常业务层代码在src文件夹`org.linlinjava.litemall.db.service` 包中。
+通常业务层代码在src文件夹`com.feel.mall.db.service` 包中。
 
 ### 2.2.3 mybatis generator支持代码
 
@@ -705,7 +705,7 @@ mybatis generator自动生成代码时，通过内置类型转换器自动把数
     ```
         <table tableName="litemall_goods">
             <columnOverride column="gallery" javaType="java.lang.String[]"
-                            typeHandler="org.linlinjava.litemall.db.mybatis.JsonStringArrayTypeHandler"/>
+                            typeHandler="JsonStringArrayTypeHandler"/>
         </table>
     ```
 3. 使用mybatis generator自动生成代码，可以看到LitemallGoods的gallery是`String[]`类型。
@@ -760,7 +760,7 @@ mybatis generator自动生成代码时，通过内置类型转换器自动把数
     }
    ```
 
-5. 可以在`src/test/java/org.linlinjava.litemall.db`包里面创建LitemallDemoTest.java类,
+5. 可以在`src/test/java/com.feel.mall.db`包里面创建LitemallDemoTest.java类,
     使用Junit进行测试。
 
     ```java

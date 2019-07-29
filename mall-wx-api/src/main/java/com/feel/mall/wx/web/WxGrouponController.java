@@ -13,12 +13,7 @@ import com.feel.mall.core.express.dao.ExpressInfo;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import org.linlinjava.litemall.db.domain.*;
-import org.linlinjava.litemall.db.service.*;
 import com.feel.mall.db.util.OrderUtil;
-import com.feel.mall.wx.annotation.LoginUser;
-import com.feel.mall.wx.service.WxGrouponRuleService;
-import com.feel.mall.wx.vo.GrouponRuleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.feel.mall.wx.util.WxResponseCode.*;
-
 /**
  * 团购服务
  * <p>
@@ -46,23 +39,23 @@ public class WxGrouponController {
     private final Log logger = LogFactory.getLog(WxGrouponController.class);
 
     @Autowired
-    private LitemallGrouponRulesService rulesService;
+    private MallGrouponRulesService rulesService;
     @Autowired
     private WxGrouponRuleService wxGrouponRuleService;
     @Autowired
-    private LitemallGrouponService grouponService;
+    private MallGrouponService grouponService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
     @Autowired
-    private LitemallOrderService orderService;
+    private MallOrderService orderService;
     @Autowired
-    private LitemallOrderGoodsService orderGoodsService;
+    private MallOrderGoodsService orderGoodsService;
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
     @Autowired
     private ExpressService expressService;
     @Autowired
-    private LitemallGrouponRulesService grouponRulesService;
+    private MallGrouponRulesService grouponRulesService;
 
     /**
      * 团购规则列表
@@ -93,18 +86,18 @@ public class WxGrouponController {
             return ResponseUtil.unlogin();
         }
 
-        LitemallGroupon groupon = grouponService.queryById(grouponId);
+        MallGroupon groupon = grouponService.queryById(grouponId);
         if (groupon == null) {
             return ResponseUtil.badArgumentValue();
         }
 
-        LitemallGrouponRules rules = rulesService.queryById(groupon.getRulesId());
+        MallGrouponRules rules = rulesService.queryById(groupon.getRulesId());
         if (rules == null) {
             return ResponseUtil.badArgumentValue();
         }
 
         // 订单信息
-        LitemallOrder order = orderService.findById(groupon.getOrderId());
+        MallOrder order = orderService.findById(groupon.getOrderId());
         if (null == order) {
             return ResponseUtil.fail(WxResponseCode.ORDER_UNKNOWN, "订单不存在");
         }
@@ -126,9 +119,9 @@ public class WxGrouponController {
         orderVo.put("expCode", order.getShipChannel());
         orderVo.put("expNo", order.getShipSn());
 
-        List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
+        List<MallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
         List<Map<String, Object>> orderGoodsVoList = new ArrayList<>(orderGoodsList.size());
-        for (LitemallOrderGoods orderGoods : orderGoodsList) {
+        for (MallOrderGoods orderGoods : orderGoodsList) {
             Map<String, Object> orderGoodsVo = new HashMap<>();
             orderGoodsVo.put("id", orderGoods.getId());
             orderGoodsVo.put("orderId", orderGoods.getOrderId());
@@ -163,10 +156,10 @@ public class WxGrouponController {
             linkGrouponId = groupon.getGrouponId();
 
         }
-        List<LitemallGroupon> groupons = grouponService.queryJoinRecord(linkGrouponId);
+        List<MallGroupon> groupons = grouponService.queryJoinRecord(linkGrouponId);
 
         UserVo joiner;
-        for (LitemallGroupon grouponItem : groupons) {
+        for (MallGroupon grouponItem : groupons) {
             joiner = userService.findUserVoById(grouponItem.getUserId());
             joiners.add(joiner);
         }
@@ -187,17 +180,17 @@ public class WxGrouponController {
      */
     @GetMapping("join")
     public Object join(@NotNull Integer grouponId) {
-        LitemallGroupon groupon = grouponService.queryById(grouponId);
+        MallGroupon groupon = grouponService.queryById(grouponId);
         if (groupon == null) {
             return ResponseUtil.badArgumentValue();
         }
 
-        LitemallGrouponRules rules = rulesService.queryById(groupon.getRulesId());
+        MallGrouponRules rules = rulesService.queryById(groupon.getRulesId());
         if (rules == null) {
             return ResponseUtil.badArgumentValue();
         }
 
-        LitemallGoods goods = goodsService.findById(rules.getGoodsId());
+        MallGoods goods = goodsService.findById(rules.getGoodsId());
         if (goods == null) {
             return ResponseUtil.badArgumentValue();
         }
@@ -222,7 +215,7 @@ public class WxGrouponController {
             return ResponseUtil.unlogin();
         }
 
-        List<LitemallGroupon> myGroupons;
+        List<MallGroupon> myGroupons;
         if (showType == 0) {
             myGroupons = grouponService.queryMyGroupon(userId);
         } else {
@@ -231,10 +224,10 @@ public class WxGrouponController {
 
         List<Map<String, Object>> grouponVoList = new ArrayList<>(myGroupons.size());
 
-        LitemallOrder order;
-        LitemallGrouponRules rules;
-        LitemallUser creator;
-        for (LitemallGroupon groupon : myGroupons) {
+        MallOrder order;
+        MallGrouponRules rules;
+        MallUser creator;
+        for (MallGroupon groupon : myGroupons) {
             order = orderService.findById(groupon.getOrderId());
             rules = rulesService.queryById(groupon.getRulesId());
             creator = userService.findById(groupon.getCreatorUserId());
@@ -265,9 +258,9 @@ public class WxGrouponController {
             grouponVo.put("orderStatusText", OrderUtil.orderStatusText(order));
             grouponVo.put("handleOption", OrderUtil.build(order));
 
-            List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
+            List<MallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
             List<Map<String, Object>> orderGoodsVoList = new ArrayList<>(orderGoodsList.size());
-            for (LitemallOrderGoods orderGoods : orderGoodsList) {
+            for (MallOrderGoods orderGoods : orderGoodsList) {
                 Map<String, Object> orderGoodsVo = new HashMap<>();
                 orderGoodsVo.put("id", orderGoods.getId());
                 orderGoodsVo.put("goodsName", orderGoods.getGoodsName());

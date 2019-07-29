@@ -1,4 +1,4 @@
-litemall:
+mall:
   # 开发者应该设置成自己的wx相关信息
   wx:
     app-id: wxa5b486c6b918ecfb
@@ -98,17 +98,17 @@ litemall:
       endpoint: oss-cn-shenzhen.aliyuncs.com
       accessKeyId: 111111
       accessKeySecret: xxxxxx
-      bucketName: litemall
+      bucketName: mall
     # 腾讯对象存储配置信息
     # 请参考 https://cloud.tencent.com/document/product/436/6249
     tencent:
       secretId: 111111
       secretKey: xxxxxx
       region: xxxxxx
-      bucketName: litemall
+      bucketName: mall
     # 七牛云对象存储配置信息
     qiniu:
       endpoint: http://pd5cb6ulu.bkt.clouddn.com
       accessKey: 111111
       secretKey: xxxxxx
-      bucketName: litemall
+      bucketName: mall

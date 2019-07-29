@@ -3,11 +3,11 @@ package com.feel.mall.admin.job;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.system.SystemConfig;
-import com.feel.mall.db.domain.LitemallOrder;
-import com.feel.mall.db.domain.LitemallOrderGoods;
-import com.feel.mall.db.service.LitemallGoodsProductService;
-import com.feel.mall.db.service.LitemallOrderGoodsService;
-import com.feel.mall.db.service.LitemallOrderService;
+import com.feel.mall.db.domain.MallOrder;
+import com.feel.mall.db.domain.MallOrderGoods;
+import com.feel.mall.db.service.MallGoodsProductService;
+import com.feel.mall.db.service.MallOrderGoodsService;
+import com.feel.mall.db.service.MallOrderService;
 import com.feel.mall.db.util.OrderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,11 +25,11 @@ public class OrderJob {
     private final Log logger = LogFactory.getLog(OrderJob.class);
 
     @Autowired
-    private LitemallOrderGoodsService orderGoodsService;
+    private MallOrderGoodsService orderGoodsService;
     @Autowired
-    private LitemallOrderService orderService;
+    private MallOrderService orderService;
     @Autowired
-    private LitemallGoodsProductService productService;
+    private MallGoodsProductService productService;
 
     /**
      * 自动取消订单
@@ -45,8 +45,8 @@ public class OrderJob {
     public void checkOrderUnpaid() {
         logger.info("系统开启任务检查订单是否已经超期自动取消订单");
 
-        List<LitemallOrder> orderList = orderService.queryUnpaid(SystemConfig.getOrderUnpaid());
-        for (LitemallOrder order : orderList) {
+        List<MallOrder> orderList = orderService.queryUnpaid(SystemConfig.getOrderUnpaid());
+        for (MallOrder order : orderList) {
             // 设置订单已取消状态
             order.setOrderStatus(OrderUtil.STATUS_AUTO_CANCEL);
             order.setEndTime(LocalDateTime.now());
@@ -56,8 +56,8 @@ public class OrderJob {
 
             // 商品货品数量增加
             Integer orderId = order.getId();
-            List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
-            for (LitemallOrderGoods orderGoods : orderGoodsList) {
+            List<MallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
+            for (MallOrderGoods orderGoods : orderGoodsList) {
                 Integer productId = orderGoods.getProductId();
                 Short number = orderGoods.getNumber();
                 if (productService.addStock(productId, number) == 0) {
@@ -81,8 +81,8 @@ public class OrderJob {
     public void checkOrderUnconfirm() {
         logger.info("系统开启任务检查订单是否已经超期自动确认收货");
 
-        List<LitemallOrder> orderList = orderService.queryUnconfirm(SystemConfig.getOrderUnconfirm());
-        for (LitemallOrder order : orderList) {
+        List<MallOrder> orderList = orderService.queryUnconfirm(SystemConfig.getOrderUnconfirm());
+        for (MallOrder order : orderList) {
 
             // 设置订单已取消状态
             order.setOrderStatus(OrderUtil.STATUS_AUTO_CONFIRM);
@@ -108,13 +108,13 @@ public class OrderJob {
     public void checkOrderComment() {
         logger.info("系统开启任务检查订单是否已经超期未评价");
 
-        List<LitemallOrder> orderList = orderService.queryComment(SystemConfig.getOrderComment());
-        for (LitemallOrder order : orderList) {
+        List<MallOrder> orderList = orderService.queryComment(SystemConfig.getOrderComment());
+        for (MallOrder order : orderList) {
             order.setComments((short) 0);
             orderService.updateWithOptimisticLocker(order);
 
-            List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
-            for (LitemallOrderGoods orderGoods : orderGoodsList) {
+            List<MallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
+            for (MallOrderGoods orderGoods : orderGoodsList) {
                 orderGoods.setComment(-1);
                 orderGoodsService.updateById(orderGoods);
             }

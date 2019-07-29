@@ -6,11 +6,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.RegexUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallFeedback;
-import com.feel.mall.db.domain.LitemallUser;
-import com.feel.mall.db.service.LitemallFeedbackService;
-import com.feel.mall.db.service.LitemallUserService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallFeedback;
+import com.feel.mall.db.domain.MallUser;
+import com.feel.mall.db.service.MallFeedbackService;
+import com.feel.mall.db.service.MallUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +30,11 @@ public class WxFeedbackController {
     private final Log logger = LogFactory.getLog(WxFeedbackController.class);
 
     @Autowired
-    private LitemallFeedbackService feedbackService;
+    private MallFeedbackService feedbackService;
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
 
-    private Object validate(LitemallFeedback feedback) {
+    private Object validate(MallFeedback feedback) {
         String content = feedback.getContent();
         if (StringUtils.isEmpty(content)) {
             return ResponseUtil.badArgument();
@@ -70,7 +69,7 @@ public class WxFeedbackController {
      * @return 操作结果
      */
     @PostMapping("submit")
-    public Object submit(@LoginUser Integer userId, @RequestBody LitemallFeedback feedback) {
+    public Object submit(@LoginUser Integer userId, @RequestBody MallFeedback feedback) {
         if (userId == null) {
             return ResponseUtil.unlogin();
         }
@@ -79,7 +78,7 @@ public class WxFeedbackController {
             return error;
         }
 
-        LitemallUser user = userService.findById(userId);
+        MallUser user = userService.findById(userId);
         String username = user.getUsername();
         feedback.setId(null);
         feedback.setUserId(userId);

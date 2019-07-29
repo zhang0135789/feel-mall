@@ -6,11 +6,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.RegexUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallAddress;
-import com.feel.mall.db.service.LitemallAddressService;
-import com.feel.mall.db.service.LitemallRegionService;
-import com.feel.mall.wx.annotation.LoginUser;
-import com.feel.mall.wx.service.GetRegionService;
+import com.feel.mall.db.domain.MallAddress;
+import com.feel.mall.db.service.MallAddressService;
+import com.feel.mall.db.service.MallRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -29,10 +27,10 @@ public class WxAddressController extends GetRegionService {
 	private final Log logger = LogFactory.getLog(WxAddressController.class);
 
 	@Autowired
-	private LitemallAddressService addressService;
+	private MallAddressService addressService;
 
 	@Autowired
-	private LitemallRegionService regionService;
+	private MallRegionService regionService;
 
 
 	/**
@@ -46,7 +44,7 @@ public class WxAddressController extends GetRegionService {
 		if (userId == null) {
 			return ResponseUtil.unlogin();
 		}
-		List<LitemallAddress> addressList = addressService.queryByUid(userId);
+		List<MallAddress> addressList = addressService.queryByUid(userId);
 		return ResponseUtil.okList(addressList);
 	}
 
@@ -63,14 +61,14 @@ public class WxAddressController extends GetRegionService {
 			return ResponseUtil.unlogin();
 		}
 
-		LitemallAddress address = addressService.query(userId, id);
+		MallAddress address = addressService.query(userId, id);
 		if (address == null) {
 			return ResponseUtil.badArgumentValue();
 		}
 		return ResponseUtil.ok(address);
 	}
 
-	private Object validate(LitemallAddress address) {
+	private Object validate(MallAddress address) {
 		String name = address.getName();
 		if (StringUtils.isEmpty(name)) {
 			return ResponseUtil.badArgument();
@@ -126,7 +124,7 @@ public class WxAddressController extends GetRegionService {
 	 * @return 添加或更新操作结果
 	 */
 	@PostMapping("save")
-	public Object save(@LoginUser Integer userId, @RequestBody LitemallAddress address) {
+	public Object save(@LoginUser Integer userId, @RequestBody MallAddress address) {
 		if (userId == null) {
 			return ResponseUtil.unlogin();
 		}
@@ -161,7 +159,7 @@ public class WxAddressController extends GetRegionService {
 	 * @return 删除操作结果
 	 */
 	@PostMapping("delete")
-	public Object delete(@LoginUser Integer userId, @RequestBody LitemallAddress address) {
+	public Object delete(@LoginUser Integer userId, @RequestBody MallAddress address) {
 		if (userId == null) {
 			return ResponseUtil.unlogin();
 		}

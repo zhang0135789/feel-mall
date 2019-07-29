@@ -1,7 +1,7 @@
 package com.feel.mall.wx.service;
 
-import com.feel.mall.db.domain.LitemallRegion;
-import com.feel.mall.db.service.LitemallRegionService;
+import com.feel.mall.db.domain.MallRegion;
+import com.feel.mall.db.service.MallRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,20 +15,20 @@ import java.util.List;
 public class GetRegionService {
 
 	@Autowired
-	private LitemallRegionService regionService;
+	private MallRegionService regionService;
 
-	private static List<LitemallRegion> litemallRegions;
+	private static List<MallRegion> mallRegions;
 
-	protected List<LitemallRegion> getLitemallRegions() {
-		if(litemallRegions==null){
+	protected List<MallRegion> getLitemallRegions() {
+		if(mallRegions ==null){
 			createRegion();
 		}
-		return litemallRegions;
+		return mallRegions;
 	}
 
 	private synchronized void createRegion(){
-		if (litemallRegions == null) {
-			litemallRegions = regionService.getAll();
+		if (mallRegions == null) {
+			mallRegions = regionService.getAll();
 		}
 	}
 }

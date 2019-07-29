@@ -5,10 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.domain.LitemallTopic;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.db.service.LitemallTopicService;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.domain.MallTopic;
+import com.feel.mall.db.service.MallGoodsService;
+import com.feel.mall.db.service.MallTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +32,9 @@ public class WxTopicController {
     private final Log logger = LogFactory.getLog(WxTopicController.class);
 
     @Autowired
-    private LitemallTopicService topicService;
+    private MallTopicService topicService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
     /**
      * 专题列表
@@ -48,7 +48,7 @@ public class WxTopicController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallTopic> topicList = topicService.queryList(page, limit, sort, order);
+        List<MallTopic> topicList = topicService.queryList(page, limit, sort, order);
         return ResponseUtil.okList(topicList);
     }
 
@@ -60,10 +60,10 @@ public class WxTopicController {
      */
     @GetMapping("detail")
     public Object detail(@NotNull Integer id) {
-        LitemallTopic topic = topicService.findById(id);
-        List<LitemallGoods> goods = new ArrayList<>();
+        MallTopic topic = topicService.findById(id);
+        List<MallGoods> goods = new ArrayList<>();
         for (Integer i : topic.getGoods()) {
-            LitemallGoods good = goodsService.findByIdVO(i);
+            MallGoods good = goodsService.findByIdVO(i);
             if (null != good)
                 goods.add(good);
         }
@@ -82,7 +82,7 @@ public class WxTopicController {
      */
     @GetMapping("related")
     public Object related(@NotNull Integer id) {
-        List<LitemallTopic> topicRelatedList = topicService.queryRelatedList(id, 0, 4);
+        List<MallTopic> topicRelatedList = topicService.queryRelatedList(id, 0, 4);
         return ResponseUtil.okList(topicRelatedList);
     }
 }

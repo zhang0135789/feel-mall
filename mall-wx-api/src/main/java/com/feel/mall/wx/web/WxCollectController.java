@@ -8,11 +8,10 @@ import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallCollect;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.service.LitemallCollectService;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallCollect;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.service.MallCollectService;
+import com.feel.mall.db.service.MallGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +32,9 @@ public class WxCollectController {
     private final Log logger = LogFactory.getLog(WxCollectController.class);
 
     @Autowired
-    private LitemallCollectService collectService;
+    private MallCollectService collectService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
     /**
      * 用户收藏列表
@@ -57,16 +56,16 @@ public class WxCollectController {
             return ResponseUtil.unlogin();
         }
 
-        List<LitemallCollect> collectList = collectService.queryByType(userId, type, page, limit, sort, order);
+        List<MallCollect> collectList = collectService.queryByType(userId, type, page, limit, sort, order);
 
         List<Object> collects = new ArrayList<>(collectList.size());
-        for (LitemallCollect collect : collectList) {
+        for (MallCollect collect : collectList) {
             Map<String, Object> c = new HashMap<String, Object>();
             c.put("id", collect.getId());
             c.put("type", collect.getType());
             c.put("valueId", collect.getValueId());
 
-            LitemallGoods goods = goodsService.findById(collect.getValueId());
+            MallGoods goods = goodsService.findById(collect.getValueId());
             c.put("name", goods.getName());
             c.put("brief", goods.getBrief());
             c.put("picUrl", goods.getPicUrl());
@@ -99,12 +98,12 @@ public class WxCollectController {
             return ResponseUtil.badArgument();
         }
 
-        LitemallCollect collect = collectService.queryByTypeAndValue(userId, type, valueId);
+        MallCollect collect = collectService.queryByTypeAndValue(userId, type, valueId);
 
         if (collect != null) {
             collectService.deleteById(collect.getId());
         } else {
-            collect = new LitemallCollect();
+            collect = new MallCollect();
             collect.setUserId(userId);
             collect.setValueId(valueId);
             collect.setType(type);

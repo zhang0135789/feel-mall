@@ -183,7 +183,7 @@ litemall-db模块的application-db.yaml资源文件中reasonable是true
 有时（特别是采用mybatis generator重新生成代码）后端服务报错
 
 ```
-org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): org.linlinjava.litemall.db.dao.XXXX
+org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.feel.mall.db.dao.XXXX
 ```
 
 原因：
@@ -205,7 +205,7 @@ mvn package
 ```
 Error querying database. Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'add_time' in 'field list'
 The error may exist in org/linlinjava/litemall/db/dao/LitemallSystemMapper.xml
-The error may involve org.linlinjava.litemall.db.dao.LitemallSystemMapper.selectByExample-Inline
+The error may involve LitemallSystemMapper.selectByExample-Inline
 The error occurred while setting parameters
 SQL: select id, key_name, key_value, add_time, update_time, deleted from litemall_system
 Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'add_time' in 'field list'

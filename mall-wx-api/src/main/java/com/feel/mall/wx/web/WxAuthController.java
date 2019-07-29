@@ -16,15 +16,11 @@ import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.RegexUtil;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.util.bcrypt.BCryptPasswordEncoder;
-import com.feel.mall.db.domain.LitemallUser;
+import com.feel.mall.db.domain.MallUser;
 import com.feel.mall.db.service.CouponAssignService;
-import com.feel.mall.db.service.LitemallUserService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.service.MallUserService;
 import com.feel.mall.wx.dto.UserInfo;
-import com.feel.mall.wx.dto.UserToken;
 import com.feel.mall.wx.dto.WxLoginInfo;
-import com.feel.mall.wx.service.CaptchaCodeManager;
-import com.feel.mall.wx.service.UserTokenManager;
 import com.feel.mall.core.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -37,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.feel.mall.wx.util.WxResponseCode.*;
-
 /**
  * 鉴权服务
  */
@@ -49,7 +43,7 @@ public class WxAuthController {
     private final Log logger = LogFactory.getLog(WxAuthController.class);
 
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
 
     @Autowired
     private WxMaService wxService;
@@ -75,8 +69,8 @@ public class WxAuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<LitemallUser> userList = userService.queryByUsername(username);
-        LitemallUser user = null;
+        List<MallUser> userList = userService.queryByUsername(username);
+        MallUser user = null;
         if (userList.size() > 1) {
             return ResponseUtil.serious();
         } else if (userList.size() == 0) {
@@ -140,9 +134,9 @@ public class WxAuthController {
             return ResponseUtil.fail();
         }
 
-        LitemallUser user = userService.queryByOid(openId);
+        MallUser user = userService.queryByOid(openId);
         if (user == null) {
-            user = new LitemallUser();
+            user = new MallUser();
             user.setUsername(openId);
             user.setPassword(openId);
             user.setWeixinOpenid(openId);
@@ -250,7 +244,7 @@ public class WxAuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<LitemallUser> userList = userService.queryByUsername(username);
+        List<MallUser> userList = userService.queryByUsername(username);
         if (userList.size() > 0) {
             return ResponseUtil.fail(WxResponseCode.AUTH_NAME_REGISTERED, "用户名已注册");
         }
@@ -281,7 +275,7 @@ public class WxAuthController {
             return ResponseUtil.serious();
         }
         if (userList.size() == 1) {
-            LitemallUser checkUser = userList.get(0);
+            MallUser checkUser = userList.get(0);
             String checkUsername = checkUser.getUsername();
             String checkPassword = checkUser.getPassword();
             if (!checkUsername.equals(openId) || !checkPassword.equals(openId)) {
@@ -289,10 +283,10 @@ public class WxAuthController {
             }
         }
 
-        LitemallUser user = null;
+        MallUser user = null;
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(password);
-        user = new LitemallUser();
+        user = new MallUser();
         user.setUsername(username);
         user.setPassword(encodedPassword);
         user.setMobile(mobile);
@@ -396,8 +390,8 @@ public class WxAuthController {
         if (cacheCode == null || cacheCode.isEmpty() || !cacheCode.equals(code))
             return ResponseUtil.fail(WxResponseCode.AUTH_CAPTCHA_UNMATCH, "验证码错误");
 
-        List<LitemallUser> userList = userService.queryByMobile(mobile);
-        LitemallUser user = null;
+        List<MallUser> userList = userService.queryByMobile(mobile);
+        MallUser user = null;
         if (userList.size() > 1) {
             return ResponseUtil.serious();
         } else if (userList.size() == 0) {
@@ -450,8 +444,8 @@ public class WxAuthController {
         if (cacheCode == null || cacheCode.isEmpty() || !cacheCode.equals(code))
             return ResponseUtil.fail(WxResponseCode.AUTH_CAPTCHA_UNMATCH, "验证码错误");
 
-        List<LitemallUser> userList = userService.queryByMobile(mobile);
-        LitemallUser user = null;
+        List<MallUser> userList = userService.queryByMobile(mobile);
+        MallUser user = null;
         if (userList.size() > 1) {
             return ResponseUtil.fail(WxResponseCode.AUTH_MOBILE_REGISTERED, "手机号已注册");
         }
@@ -494,7 +488,7 @@ public class WxAuthController {
         Byte gender = JacksonUtil.parseByte(body, "gender");
         String nickname = JacksonUtil.parseString(body, "nickname");
 
-        LitemallUser user = userService.findById(userId);
+        MallUser user = userService.findById(userId);
         if(!StringUtils.isEmpty(avatar)){
             user.setAvatar(avatar);
         }
@@ -524,7 +518,7 @@ public class WxAuthController {
     	if (userId == null) {
             return ResponseUtil.unlogin();
         }
-    	LitemallUser user = userService.findById(userId);
+    	MallUser user = userService.findById(userId);
         String encryptedData = JacksonUtil.parseString(body, "encryptedData");
         String iv = JacksonUtil.parseString(body, "iv");
         WxMaPhoneNumberInfo phoneNumberInfo = this.wxService.getUserService().getPhoneNoInfo(user.getSessionKey(), encryptedData, iv);
@@ -550,7 +544,7 @@ public class WxAuthController {
             return ResponseUtil.unlogin();
         }
 
-        LitemallUser user = userService.findById(userId);
+        MallUser user = userService.findById(userId);
         Map<Object, Object> data = new HashMap<Object, Object>();
         data.put("nickName", user.getNickname());
         data.put("avatar", user.getAvatar());

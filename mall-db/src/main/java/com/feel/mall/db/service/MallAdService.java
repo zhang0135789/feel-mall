@@ -1,9 +1,9 @@
 package com.feel.mall.db.service;
 
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallAdMapper;
-import com.feel.mall.db.domain.LitemallAd;
-import com.feel.mall.db.domain.LitemallAdExample;
+import com.feel.mall.db.dao.MallAdMapper;
+import com.feel.mall.db.domain.MallAd;
+import com.feel.mall.db.domain.MallAdExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,19 +12,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallAdService {
+public class MallAdService {
     @Resource
-    private LitemallAdMapper adMapper;
+    private MallAdMapper mallAdMapper;
 
-    public List<LitemallAd> queryIndex() {
-        LitemallAdExample example = new LitemallAdExample();
+    public List<MallAd> queryIndex() {
+        MallAdExample example = new MallAdExample();
         example.or().andPositionEqualTo((byte) 1).andDeletedEqualTo(false).andEnabledEqualTo(true);
-        return adMapper.selectByExample(example);
+        return mallAdMapper.selectByExample(example);
     }
 
-    public List<LitemallAd> querySelective(String name, String content, Integer page, Integer limit, String sort, String order) {
-        LitemallAdExample example = new LitemallAdExample();
-        LitemallAdExample.Criteria criteria = example.createCriteria();
+    public List<MallAd> querySelective(String name, String content, Integer page, Integer limit, String sort, String order) {
+        MallAdExample example = new MallAdExample();
+        MallAdExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
@@ -39,25 +39,25 @@ public class LitemallAdService {
         }
 
         PageHelper.startPage(page, limit);
-        return adMapper.selectByExample(example);
+        return mallAdMapper.selectByExample(example);
     }
 
-    public int updateById(LitemallAd ad) {
+    public int updateById(MallAd ad) {
         ad.setUpdateTime(LocalDateTime.now());
-        return adMapper.updateByPrimaryKeySelective(ad);
+        return mallAdMapper.updateByPrimaryKeySelective(ad);
     }
 
     public void deleteById(Integer id) {
-        adMapper.logicalDeleteByPrimaryKey(id);
+        mallAdMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallAd ad) {
+    public void add(MallAd ad) {
         ad.setAddTime(LocalDateTime.now());
         ad.setUpdateTime(LocalDateTime.now());
-        adMapper.insertSelective(ad);
+        mallAdMapper.insertSelective(ad);
     }
 
-    public LitemallAd findById(Integer id) {
-        return adMapper.selectByPrimaryKey(id);
+    public MallAd findById(Integer id) {
+        return mallAdMapper.selectByPrimaryKey(id);
     }
 }

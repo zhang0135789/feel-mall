@@ -4,11 +4,10 @@ import com.feel.mall.wx.annotation.LoginUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallUser;
-import com.feel.mall.db.domain.LitemallUserFormid;
-import com.feel.mall.db.service.LitemallUserFormIdService;
-import com.feel.mall.db.service.LitemallUserService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallUser;
+import com.feel.mall.db.domain.MallUserFormid;
+import com.feel.mall.db.service.MallUserFormIdService;
+import com.feel.mall.db.service.MallUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +24,10 @@ public class WxUserFormId {
     private final Log logger = LogFactory.getLog(WxUserFormId.class);
 
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
 
     @Autowired
-    private LitemallUserFormIdService formIdService;
+    private MallUserFormIdService formIdService;
 
     @GetMapping("create")
     public Object create(@LoginUser Integer userId, @NotNull String formId) {
@@ -36,8 +35,8 @@ public class WxUserFormId {
             return ResponseUtil.unlogin();
         }
 
-        LitemallUser user = userService.findById(userId);
-        LitemallUserFormid userFormid = new LitemallUserFormid();
+        MallUser user = userService.findById(userId);
+        MallUserFormid userFormid = new MallUserFormid();
         userFormid.setOpenid(user.getWeixinOpenid());
         userFormid.setFormid(formId);
         userFormid.setIsprepay(false);

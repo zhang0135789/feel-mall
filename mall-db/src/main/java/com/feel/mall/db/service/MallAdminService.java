@@ -1,10 +1,10 @@
 package com.feel.mall.db.service;
 
+import com.feel.mall.db.dao.MallAdminMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallAdminMapper;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.domain.LitemallAdmin.Column;
-import com.feel.mall.db.domain.LitemallAdminExample;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.domain.MallAdmin.Column;
+import com.feel.mall.db.domain.MallAdminExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,24 +13,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallAdminService {
+public class MallAdminService {
     private final Column[] result = new Column[]{Column.id, Column.username, Column.avatar, Column.roleIds};
     @Resource
-    private LitemallAdminMapper adminMapper;
+    private MallAdminMapper mallAdminMapper;
 
-    public List<LitemallAdmin> findAdmin(String username) {
-        LitemallAdminExample example = new LitemallAdminExample();
+    public List<MallAdmin> findAdmin(String username) {
+        MallAdminExample example = new MallAdminExample();
         example.or().andUsernameEqualTo(username).andDeletedEqualTo(false);
-        return adminMapper.selectByExample(example);
+        return mallAdminMapper.selectByExample(example);
     }
 
-    public LitemallAdmin findAdmin(Integer id) {
-        return adminMapper.selectByPrimaryKey(id);
+    public MallAdmin findAdmin(Integer id) {
+        return mallAdminMapper.selectByPrimaryKey(id);
     }
 
-    public List<LitemallAdmin> querySelective(String username, Integer page, Integer limit, String sort, String order) {
-        LitemallAdminExample example = new LitemallAdminExample();
-        LitemallAdminExample.Criteria criteria = example.createCriteria();
+    public List<MallAdmin> querySelective(String username, Integer page, Integer limit, String sort, String order) {
+        MallAdminExample example = new MallAdminExample();
+        MallAdminExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(username)) {
             criteria.andUsernameLike("%" + username + "%");
@@ -42,31 +42,31 @@ public class LitemallAdminService {
         }
 
         PageHelper.startPage(page, limit);
-        return adminMapper.selectByExampleSelective(example, result);
+        return mallAdminMapper.selectByExampleSelective(example, result);
     }
 
-    public int updateById(LitemallAdmin admin) {
+    public int updateById(MallAdmin admin) {
         admin.setUpdateTime(LocalDateTime.now());
-        return adminMapper.updateByPrimaryKeySelective(admin);
+        return mallAdminMapper.updateByPrimaryKeySelective(admin);
     }
 
     public void deleteById(Integer id) {
-        adminMapper.logicalDeleteByPrimaryKey(id);
+        mallAdminMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallAdmin admin) {
+    public void add(MallAdmin admin) {
         admin.setAddTime(LocalDateTime.now());
         admin.setUpdateTime(LocalDateTime.now());
-        adminMapper.insertSelective(admin);
+        mallAdminMapper.insertSelective(admin);
     }
 
-    public LitemallAdmin findById(Integer id) {
-        return adminMapper.selectByPrimaryKeySelective(id, result);
+    public MallAdmin findById(Integer id) {
+        return mallAdminMapper.selectByPrimaryKeySelective(id, result);
     }
 
-    public List<LitemallAdmin> all() {
-        LitemallAdminExample example = new LitemallAdminExample();
+    public List<MallAdmin> all() {
+        MallAdminExample example = new MallAdminExample();
         example.or().andDeletedEqualTo(false);
-        return adminMapper.selectByExample(example);
+        return mallAdminMapper.selectByExample(example);
     }
 }

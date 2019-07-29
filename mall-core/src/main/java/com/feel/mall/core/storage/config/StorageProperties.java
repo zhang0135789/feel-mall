@@ -2,7 +2,7 @@ package com.feel.mall.core.storage.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "litemall.storage")
+@ConfigurationProperties(prefix = "mall.storage")
 public class StorageProperties {
     private String active;
     private Local local;

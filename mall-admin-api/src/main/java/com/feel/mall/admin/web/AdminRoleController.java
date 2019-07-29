@@ -7,21 +7,17 @@ import com.feel.mall.admin.util.PermissionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
-import com.feel.mall.admin.util.AdminResponseCode;
-import com.feel.mall.admin.util.Permission;
-import com.feel.mall.admin.util.PermissionUtil;
 import com.feel.mall.admin.vo.PermVo;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallAdmin;
-import com.feel.mall.db.domain.LitemallPermission;
-import com.feel.mall.db.domain.LitemallRole;
-import com.feel.mall.db.service.LitemallAdminService;
-import com.feel.mall.db.service.LitemallPermissionService;
-import com.feel.mall.db.service.LitemallRoleService;
+import com.feel.mall.db.domain.MallAdmin;
+import com.feel.mall.db.domain.MallPermission;
+import com.feel.mall.db.domain.MallRole;
+import com.feel.mall.db.service.MallAdminService;
+import com.feel.mall.db.service.MallPermissionService;
+import com.feel.mall.db.service.MallRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
@@ -31,9 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static com.feel.mall.admin.util.AdminResponseCode.ROLE_NAME_EXIST;
-import static com.feel.mall.admin.util.AdminResponseCode.ROLE_USER_EXIST;
-
 @RestController
 @RequestMapping("/admin/role")
 @Validated
@@ -41,11 +34,11 @@ public class AdminRoleController {
     private final Log logger = LogFactory.getLog(AdminRoleController.class);
 
     @Autowired
-    private LitemallRoleService roleService;
+    private MallRoleService roleService;
     @Autowired
-    private LitemallPermissionService permissionService;
+    private MallPermissionService permissionService;
     @Autowired
-    private LitemallAdminService adminService;
+    private MallAdminService adminService;
 
     @RequiresPermissions("admin:role:list")
     @RequiresPermissionsDesc(menu = {"系统管理", "角色管理"}, button = "角色查询")
@@ -55,16 +48,16 @@ public class AdminRoleController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallRole> roleList = roleService.querySelective(name, page, limit, sort, order);
+        List<MallRole> roleList = roleService.querySelective(name, page, limit, sort, order);
         return ResponseUtil.okList(roleList);
     }
 
     @GetMapping("/options")
     public Object options() {
-        List<LitemallRole> roleList = roleService.queryAll();
+        List<MallRole> roleList = roleService.queryAll();
 
         List<Map<String, Object>> options = new ArrayList<>(roleList.size());
-        for (LitemallRole role : roleList) {
+        for (MallRole role : roleList) {
             Map<String, Object> option = new HashMap<>(2);
             option.put("value", role.getId());
             option.put("label", role.getName());
@@ -78,12 +71,12 @@ public class AdminRoleController {
     @RequiresPermissionsDesc(menu = {"系统管理", "角色管理"}, button = "角色详情")
     @GetMapping("/read")
     public Object read(@NotNull Integer id) {
-        LitemallRole role = roleService.findById(id);
+        MallRole role = roleService.findById(id);
         return ResponseUtil.ok(role);
     }
 
 
-    private Object validate(LitemallRole role) {
+    private Object validate(MallRole role) {
         String name = role.getName();
         if (StringUtils.isEmpty(name)) {
             return ResponseUtil.badArgument();
@@ -95,7 +88,7 @@ public class AdminRoleController {
     @RequiresPermissions("admin:role:create")
     @RequiresPermissionsDesc(menu = {"系统管理", "角色管理"}, button = "角色添加")
     @PostMapping("/create")
-    public Object create(@RequestBody LitemallRole role) {
+    public Object create(@RequestBody MallRole role) {
         Object error = validate(role);
         if (error != null) {
             return error;
@@ -113,7 +106,7 @@ public class AdminRoleController {
     @RequiresPermissions("admin:role:update")
     @RequiresPermissionsDesc(menu = {"系统管理", "角色管理"}, button = "角色编辑")
     @PostMapping("/update")
-    public Object update(@RequestBody LitemallRole role) {
+    public Object update(@RequestBody MallRole role) {
         Object error = validate(role);
         if (error != null) {
             return error;
@@ -126,15 +119,15 @@ public class AdminRoleController {
     @RequiresPermissions("admin:role:delete")
     @RequiresPermissionsDesc(menu = {"系统管理", "角色管理"}, button = "角色删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallRole role) {
+    public Object delete(@RequestBody MallRole role) {
         Integer id = role.getId();
         if (id == null) {
             return ResponseUtil.badArgument();
         }
 
         // 如果当前角色所对应管理员仍存在，则拒绝删除角色。
-        List<LitemallAdmin> adminList = adminService.all();
-        for (LitemallAdmin admin : adminList) {
+        List<MallAdmin> adminList = adminService.all();
+        for (MallAdmin admin : adminList) {
             Integer[] roleIds = admin.getRoleIds();
             for (Integer roleId : roleIds) {
                 if (id.equals(roleId)) {
@@ -154,7 +147,7 @@ public class AdminRoleController {
     private Set<String> systemPermissionsString = null;
 
     private List<PermVo> getSystemPermissions() {
-        final String basicPackage = "org.linlinjava.litemall.admin";
+        final String basicPackage = "com.feel.mall.admin";
         if (systemPermissions == null) {
             List<Permission> permissions = PermissionUtil.listPermission(context, basicPackage);
             systemPermissions = PermissionUtil.listPermVo(permissions);
@@ -220,10 +213,10 @@ public class AdminRoleController {
         // 先删除旧的权限，再更新新的权限
         permissionService.deleteByRoleId(roleId);
         for (String permission : permissions) {
-            LitemallPermission litemallPermission = new LitemallPermission();
-            litemallPermission.setRoleId(roleId);
-            litemallPermission.setPermission(permission);
-            permissionService.add(litemallPermission);
+            MallPermission mallPermission = new MallPermission();
+            mallPermission.setRoleId(roleId);
+            mallPermission.setPermission(permission);
+            permissionService.add(mallPermission);
         }
         return ResponseUtil.ok();
     }

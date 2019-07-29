@@ -7,8 +7,8 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallAd;
-import com.feel.mall.db.service.LitemallAdService;
+import com.feel.mall.db.domain.MallAd;
+import com.feel.mall.db.service.MallAdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +24,7 @@ public class AdminAdController {
     private final Log logger = LogFactory.getLog(AdminAdController.class);
 
     @Autowired
-    private LitemallAdService adService;
+    private MallAdService adService;
 
     @RequiresPermissions("admin:ad:list")
     @RequiresPermissionsDesc(menu = {"推广管理", "广告管理"}, button = "查询")
@@ -34,11 +34,11 @@ public class AdminAdController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallAd> adList = adService.querySelective(name, content, page, limit, sort, order);
+        List<MallAd> adList = adService.querySelective(name, content, page, limit, sort, order);
         return ResponseUtil.okList(adList);
     }
 
-    private Object validate(LitemallAd ad) {
+    private Object validate(MallAd ad) {
         String name = ad.getName();
         if (StringUtils.isEmpty(name)) {
             return ResponseUtil.badArgument();
@@ -53,7 +53,7 @@ public class AdminAdController {
     @RequiresPermissions("admin:ad:create")
     @RequiresPermissionsDesc(menu = {"推广管理", "广告管理"}, button = "添加")
     @PostMapping("/create")
-    public Object create(@RequestBody LitemallAd ad) {
+    public Object create(@RequestBody MallAd ad) {
         Object error = validate(ad);
         if (error != null) {
             return error;
@@ -66,14 +66,14 @@ public class AdminAdController {
     @RequiresPermissionsDesc(menu = {"推广管理", "广告管理"}, button = "详情")
     @GetMapping("/read")
     public Object read(@NotNull Integer id) {
-        LitemallAd ad = adService.findById(id);
+        MallAd ad = adService.findById(id);
         return ResponseUtil.ok(ad);
     }
 
     @RequiresPermissions("admin:ad:update")
     @RequiresPermissionsDesc(menu = {"推广管理", "广告管理"}, button = "编辑")
     @PostMapping("/update")
-    public Object update(@RequestBody LitemallAd ad) {
+    public Object update(@RequestBody MallAd ad) {
         Object error = validate(ad);
         if (error != null) {
             return error;
@@ -88,7 +88,7 @@ public class AdminAdController {
     @RequiresPermissions("admin:ad:delete")
     @RequiresPermissionsDesc(menu = {"推广管理", "广告管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallAd ad) {
+    public Object delete(@RequestBody MallAd ad) {
         Integer id = ad.getId();
         if (id == null) {
             return ResponseUtil.badArgument();

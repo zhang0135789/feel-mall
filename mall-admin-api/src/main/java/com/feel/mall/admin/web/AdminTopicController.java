@@ -4,14 +4,13 @@ import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.feel.mall.admin.annotation.RequiresPermissionsDesc;
 import com.feel.mall.core.util.ResponseUtil;
 import com.feel.mall.core.validator.Order;
 import com.feel.mall.core.validator.Sort;
-import com.feel.mall.db.domain.LitemallGoods;
-import com.feel.mall.db.domain.LitemallTopic;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.db.service.LitemallTopicService;
+import com.feel.mall.db.domain.MallGoods;
+import com.feel.mall.db.domain.MallTopic;
+import com.feel.mall.db.service.MallGoodsService;
+import com.feel.mall.db.service.MallTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -31,9 +30,9 @@ public class AdminTopicController {
     private final Log logger = LogFactory.getLog(AdminTopicController.class);
 
     @Autowired
-    private LitemallTopicService topicService;
+    private MallTopicService topicService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
     @RequiresPermissions("admin:topic:list")
     @RequiresPermissionsDesc(menu = {"推广管理", "专题管理"}, button = "查询")
@@ -43,11 +42,11 @@ public class AdminTopicController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallTopic> topicList = topicService.querySelective(title, subtitle, page, limit, sort, order);
+        List<MallTopic> topicList = topicService.querySelective(title, subtitle, page, limit, sort, order);
         return ResponseUtil.okList(topicList);
     }
 
-    private Object validate(LitemallTopic topic) {
+    private Object validate(MallTopic topic) {
         String title = topic.getTitle();
         if (StringUtils.isEmpty(title)) {
             return ResponseUtil.badArgument();
@@ -66,7 +65,7 @@ public class AdminTopicController {
     @RequiresPermissions("admin:topic:create")
     @RequiresPermissionsDesc(menu = {"推广管理", "专题管理"}, button = "添加")
     @PostMapping("/create")
-    public Object create(@RequestBody LitemallTopic topic) {
+    public Object create(@RequestBody MallTopic topic) {
         Object error = validate(topic);
         if (error != null) {
             return error;
@@ -79,9 +78,9 @@ public class AdminTopicController {
     @RequiresPermissionsDesc(menu = {"推广管理", "专题管理"}, button = "详情")
     @GetMapping("/read")
     public Object read(@NotNull Integer id) {
-        LitemallTopic topic = topicService.findById(id);
+        MallTopic topic = topicService.findById(id);
         Integer[] goodsIds = topic.getGoods();
-        List<LitemallGoods> goodsList = null;
+        List<MallGoods> goodsList = null;
         if (goodsIds == null || goodsIds.length == 0) {
             goodsList = new ArrayList<>();
         } else {
@@ -96,7 +95,7 @@ public class AdminTopicController {
     @RequiresPermissions("admin:topic:update")
     @RequiresPermissionsDesc(menu = {"推广管理", "专题管理"}, button = "编辑")
     @PostMapping("/update")
-    public Object update(@RequestBody LitemallTopic topic) {
+    public Object update(@RequestBody MallTopic topic) {
         Object error = validate(topic);
         if (error != null) {
             return error;
@@ -110,7 +109,7 @@ public class AdminTopicController {
     @RequiresPermissions("admin:topic:delete")
     @RequiresPermissionsDesc(menu = {"推广管理", "专题管理"}, button = "删除")
     @PostMapping("/delete")
-    public Object delete(@RequestBody LitemallTopic topic) {
+    public Object delete(@RequestBody MallTopic topic) {
         topicService.deleteById(topic.getId());
         return ResponseUtil.ok();
     }

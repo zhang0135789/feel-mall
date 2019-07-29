@@ -8,12 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.system.SystemConfig;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallCategory;
-import com.feel.mall.db.domain.LitemallGoods;
-import org.linlinjava.litemall.db.service.*;
-import com.feel.mall.wx.annotation.LoginUser;
-import com.feel.mall.wx.service.HomeCacheManager;
-import com.feel.mall.wx.service.WxGrouponRuleService;
+import com.feel.mall.db.domain.MallCategory;
+import com.feel.mall.db.domain.MallGoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,25 +33,25 @@ public class WxHomeController {
     private final Log logger = LogFactory.getLog(WxHomeController.class);
 
     @Autowired
-    private LitemallAdService adService;
+    private MallAdService adService;
 
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
 
     @Autowired
-    private LitemallBrandService brandService;
+    private MallBrandService brandService;
 
     @Autowired
-    private LitemallTopicService topicService;
+    private MallTopicService topicService;
 
     @Autowired
-    private LitemallCategoryService categoryService;
+    private MallCategoryService categoryService;
 
     @Autowired
     private WxGrouponRuleService grouponService;
 
     @Autowired
-    private LitemallCouponService couponService;
+    private MallCouponService couponService;
 
     private final static ArrayBlockingQueue<Runnable> WORK_QUEUE = new ArrayBlockingQueue<>(9);
 
@@ -156,15 +152,15 @@ public class WxHomeController {
 
     private List<Map> getCategoryList() {
         List<Map> categoryList = new ArrayList<>();
-        List<LitemallCategory> catL1List = categoryService.queryL1WithoutRecommend(0, SystemConfig.getCatlogListLimit());
-        for (LitemallCategory catL1 : catL1List) {
-            List<LitemallCategory> catL2List = categoryService.queryByPid(catL1.getId());
+        List<MallCategory> catL1List = categoryService.queryL1WithoutRecommend(0, SystemConfig.getCatlogListLimit());
+        for (MallCategory catL1 : catL1List) {
+            List<MallCategory> catL2List = categoryService.queryByPid(catL1.getId());
             List<Integer> l2List = new ArrayList<>();
-            for (LitemallCategory catL2 : catL2List) {
+            for (MallCategory catL2 : catL2List) {
                 l2List.add(catL2.getId());
             }
 
-            List<LitemallGoods> categoryGoods;
+            List<MallGoods> categoryGoods;
             if (l2List.size() == 0) {
                 categoryGoods = new ArrayList<>();
             } else {

@@ -12,11 +12,10 @@ import com.feel.mall.core.notify.NotifyService;
 import com.feel.mall.core.notify.NotifyType;
 import com.feel.mall.core.util.JacksonUtil;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallComment;
-import com.feel.mall.db.domain.LitemallOrder;
-import com.feel.mall.db.domain.LitemallOrderGoods;
+import com.feel.mall.db.domain.MallComment;
+import com.feel.mall.db.domain.MallOrder;
+import com.feel.mall.db.domain.MallOrderGoods;
 import com.feel.mall.db.domain.UserVo;
-import org.linlinjava.litemall.db.service.*;
 import com.feel.mall.db.util.OrderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,23 +28,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.feel.mall.admin.util.AdminResponseCode.*;
-
 @Service
 
 public class AdminOrderService {
     private final Log logger = LogFactory.getLog(AdminOrderService.class);
 
     @Autowired
-    private LitemallOrderGoodsService orderGoodsService;
+    private MallOrderGoodsService orderGoodsService;
     @Autowired
-    private LitemallOrderService orderService;
+    private MallOrderService orderService;
     @Autowired
-    private LitemallGoodsProductService productService;
+    private MallGoodsProductService productService;
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
     @Autowired
-    private LitemallCommentService commentService;
+    private MallCommentService commentService;
     @Autowired
     private WxPayService wxPayService;
     @Autowired
@@ -55,14 +52,14 @@ public class AdminOrderService {
 
     public Object list(Integer userId, String orderSn, List<Short> orderStatusArray,
                        Integer page, Integer limit, String sort, String order) {
-        List<LitemallOrder> orderList = orderService.querySelective(userId, orderSn, orderStatusArray, page, limit,
+        List<MallOrder> orderList = orderService.querySelective(userId, orderSn, orderStatusArray, page, limit,
                 sort, order);
         return ResponseUtil.okList(orderList);
     }
 
     public Object detail(Integer id) {
-        LitemallOrder order = orderService.findById(id);
-        List<LitemallOrderGoods> orderGoods = orderGoodsService.queryByOid(id);
+        MallOrder order = orderService.findById(id);
+        List<MallOrderGoods> orderGoods = orderGoodsService.queryByOid(id);
         UserVo user = userService.findUserVoById(order.getUserId());
         Map<String, Object> data = new HashMap<>();
         data.put("order", order);
@@ -99,7 +96,7 @@ public class AdminOrderService {
             return ResponseUtil.badArgument();
         }
 
-        LitemallOrder order = orderService.findById(orderId);
+        MallOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -145,8 +142,8 @@ public class AdminOrderService {
         }
 
         // 商品货品数量增加
-        List<LitemallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
-        for (LitemallOrderGoods orderGoods : orderGoodsList) {
+        List<MallOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
+        for (MallOrderGoods orderGoods : orderGoodsList) {
             Integer productId = orderGoods.getProductId();
             Short number = orderGoods.getNumber();
             if (productService.addStock(productId, number) == 0) {
@@ -182,7 +179,7 @@ public class AdminOrderService {
             return ResponseUtil.badArgument();
         }
 
-        LitemallOrder order = orderService.findById(orderId);
+        MallOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -232,7 +229,7 @@ public class AdminOrderService {
             return ResponseUtil.badArgument();
         }
         // 创建评价回复
-        LitemallComment comment = new LitemallComment();
+        MallComment comment = new MallComment();
         comment.setType((byte) 2);
         comment.setValueId(commentId);
         comment.setContent(content);

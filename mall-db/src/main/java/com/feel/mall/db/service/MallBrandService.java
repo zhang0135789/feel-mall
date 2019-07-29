@@ -1,11 +1,10 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallBrandMapper;
+import com.feel.mall.db.dao.MallBrandMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallBrandMapper;
-import com.feel.mall.db.domain.LitemallBrand;
-import com.feel.mall.db.domain.LitemallBrand.Column;
-import com.feel.mall.db.domain.LitemallBrandExample;
+import com.feel.mall.db.domain.MallBrand;
+import com.feel.mall.db.domain.MallBrand.Column;
+import com.feel.mall.db.domain.MallBrandExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -14,32 +13,32 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallBrandService {
+public class MallBrandService {
     @Resource
-    private LitemallBrandMapper brandMapper;
+    private MallBrandMapper mallBrandMapper;
     private Column[] columns = new Column[]{Column.id, Column.name, Column.desc, Column.picUrl, Column.floorPrice};
 
-    public List<LitemallBrand> query(Integer page, Integer limit, String sort, String order) {
-        LitemallBrandExample example = new LitemallBrandExample();
+    public List<MallBrand> query(Integer page, Integer limit, String sort, String order) {
+        MallBrandExample example = new MallBrandExample();
         example.or().andDeletedEqualTo(false);
         if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
             example.setOrderByClause(sort + " " + order);
         }
         PageHelper.startPage(page, limit);
-        return brandMapper.selectByExampleSelective(example, columns);
+        return mallBrandMapper.selectByExampleSelective(example, columns);
     }
 
-    public List<LitemallBrand> query(Integer page, Integer limit) {
+    public List<MallBrand> query(Integer page, Integer limit) {
         return query(page, limit, null, null);
     }
 
-    public LitemallBrand findById(Integer id) {
-        return brandMapper.selectByPrimaryKey(id);
+    public MallBrand findById(Integer id) {
+        return mallBrandMapper.selectByPrimaryKey(id);
     }
 
-    public List<LitemallBrand> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
-        LitemallBrandExample example = new LitemallBrandExample();
-        LitemallBrandExample.Criteria criteria = example.createCriteria();
+    public List<MallBrand> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
+        MallBrandExample example = new MallBrandExample();
+        MallBrandExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(id)) {
             criteria.andIdEqualTo(Integer.valueOf(id));
@@ -54,27 +53,27 @@ public class LitemallBrandService {
         }
 
         PageHelper.startPage(page, size);
-        return brandMapper.selectByExample(example);
+        return mallBrandMapper.selectByExample(example);
     }
 
-    public int updateById(LitemallBrand brand) {
+    public int updateById(MallBrand brand) {
         brand.setUpdateTime(LocalDateTime.now());
-        return brandMapper.updateByPrimaryKeySelective(brand);
+        return mallBrandMapper.updateByPrimaryKeySelective(brand);
     }
 
     public void deleteById(Integer id) {
-        brandMapper.logicalDeleteByPrimaryKey(id);
+        mallBrandMapper.logicalDeleteByPrimaryKey(id);
     }
 
-    public void add(LitemallBrand brand) {
+    public void add(MallBrand brand) {
         brand.setAddTime(LocalDateTime.now());
         brand.setUpdateTime(LocalDateTime.now());
-        brandMapper.insertSelective(brand);
+        mallBrandMapper.insertSelective(brand);
     }
 
-    public List<LitemallBrand> all() {
-        LitemallBrandExample example = new LitemallBrandExample();
+    public List<MallBrand> all() {
+        MallBrandExample example = new MallBrandExample();
         example.or().andDeletedEqualTo(false);
-        return brandMapper.selectByExample(example);
+        return mallBrandMapper.selectByExample(example);
     }
 }

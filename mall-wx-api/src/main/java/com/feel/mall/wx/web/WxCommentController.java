@@ -5,12 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.feel.mall.core.util.ResponseUtil;
-import com.feel.mall.db.domain.LitemallComment;
-import com.feel.mall.db.service.LitemallCommentService;
-import com.feel.mall.db.service.LitemallGoodsService;
-import com.feel.mall.db.service.LitemallTopicService;
-import com.feel.mall.db.service.LitemallUserService;
-import com.feel.mall.wx.annotation.LoginUser;
+import com.feel.mall.db.domain.MallComment;
+import com.feel.mall.db.service.MallCommentService;
+import com.feel.mall.db.service.MallGoodsService;
+import com.feel.mall.db.service.MallTopicService;
+import com.feel.mall.db.service.MallUserService;
 import com.feel.mall.wx.dto.UserInfo;
 import com.feel.mall.wx.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +32,17 @@ public class WxCommentController {
     private final Log logger = LogFactory.getLog(WxCommentController.class);
 
     @Autowired
-    private LitemallCommentService commentService;
+    private MallCommentService commentService;
     @Autowired
-    private LitemallUserService userService;
+    private MallUserService userService;
     @Autowired
     private UserInfoService userInfoService;
     @Autowired
-    private LitemallGoodsService goodsService;
+    private MallGoodsService goodsService;
     @Autowired
-    private LitemallTopicService topicService;
+    private MallTopicService topicService;
 
-    private Object validate(LitemallComment comment) {
+    private Object validate(MallComment comment) {
         String content = comment.getContent();
         if (StringUtils.isEmpty(content)) {
             return ResponseUtil.badArgument();
@@ -88,7 +87,7 @@ public class WxCommentController {
      * @return 发表评论操作结果
      */
     @PostMapping("post")
-    public Object post(@LoginUser Integer userId, @RequestBody LitemallComment comment) {
+    public Object post(@LoginUser Integer userId, @RequestBody MallComment comment) {
         if (userId == null) {
             return ResponseUtil.unlogin();
         }
@@ -135,10 +134,10 @@ public class WxCommentController {
                        @NotNull Integer showType,
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit) {
-        List<LitemallComment> commentList = commentService.query(type, valueId, showType, page, limit);
+        List<MallComment> commentList = commentService.query(type, valueId, showType, page, limit);
 
         List<Map<String, Object>> commentVoList = new ArrayList<>(commentList.size());
-        for (LitemallComment comment : commentList) {
+        for (MallComment comment : commentList) {
             Map<String, Object> commentVo = new HashMap<>();
             commentVo.put("addTime", comment.getAddTime());
             commentVo.put("content", comment.getContent());

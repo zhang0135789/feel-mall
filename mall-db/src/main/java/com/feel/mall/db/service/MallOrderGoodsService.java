@@ -1,8 +1,8 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallOrderGoodsMapper;
-import com.feel.mall.db.domain.LitemallOrderGoods;
-import com.feel.mall.db.domain.LitemallOrderGoodsExample;
+import com.feel.mall.db.dao.MallOrderGoodsMapper;
+import com.feel.mall.db.domain.MallOrderGoods;
+import com.feel.mall.db.domain.MallOrderGoodsExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -10,47 +10,47 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class LitemallOrderGoodsService {
+public class MallOrderGoodsService {
     @Resource
-    private LitemallOrderGoodsMapper orderGoodsMapper;
+    private MallOrderGoodsMapper mallOrderGoodsMapper;
 
-    public int add(LitemallOrderGoods orderGoods) {
+    public int add(MallOrderGoods orderGoods) {
         orderGoods.setAddTime(LocalDateTime.now());
         orderGoods.setUpdateTime(LocalDateTime.now());
-        return orderGoodsMapper.insertSelective(orderGoods);
+        return mallOrderGoodsMapper.insertSelective(orderGoods);
     }
 
-    public List<LitemallOrderGoods> queryByOid(Integer orderId) {
-        LitemallOrderGoodsExample example = new LitemallOrderGoodsExample();
+    public List<MallOrderGoods> queryByOid(Integer orderId) {
+        MallOrderGoodsExample example = new MallOrderGoodsExample();
         example.or().andOrderIdEqualTo(orderId).andDeletedEqualTo(false);
-        return orderGoodsMapper.selectByExample(example);
+        return mallOrderGoodsMapper.selectByExample(example);
     }
 
-    public List<LitemallOrderGoods> findByOidAndGid(Integer orderId, Integer goodsId) {
-        LitemallOrderGoodsExample example = new LitemallOrderGoodsExample();
+    public List<MallOrderGoods> findByOidAndGid(Integer orderId, Integer goodsId) {
+        MallOrderGoodsExample example = new MallOrderGoodsExample();
         example.or().andOrderIdEqualTo(orderId).andGoodsIdEqualTo(goodsId).andDeletedEqualTo(false);
-        return orderGoodsMapper.selectByExample(example);
+        return mallOrderGoodsMapper.selectByExample(example);
     }
 
-    public LitemallOrderGoods findById(Integer id) {
-        return orderGoodsMapper.selectByPrimaryKey(id);
+    public MallOrderGoods findById(Integer id) {
+        return mallOrderGoodsMapper.selectByPrimaryKey(id);
     }
 
-    public void updateById(LitemallOrderGoods orderGoods) {
+    public void updateById(MallOrderGoods orderGoods) {
         orderGoods.setUpdateTime(LocalDateTime.now());
-        orderGoodsMapper.updateByPrimaryKeySelective(orderGoods);
+        mallOrderGoodsMapper.updateByPrimaryKeySelective(orderGoods);
     }
 
     public Short getComments(Integer orderId) {
-        LitemallOrderGoodsExample example = new LitemallOrderGoodsExample();
+        MallOrderGoodsExample example = new MallOrderGoodsExample();
         example.or().andOrderIdEqualTo(orderId).andDeletedEqualTo(false);
-        long count = orderGoodsMapper.countByExample(example);
+        long count = mallOrderGoodsMapper.countByExample(example);
         return (short) count;
     }
 
     public boolean checkExist(Integer goodsId) {
-        LitemallOrderGoodsExample example = new LitemallOrderGoodsExample();
+        MallOrderGoodsExample example = new MallOrderGoodsExample();
         example.or().andGoodsIdEqualTo(goodsId).andDeletedEqualTo(false);
-        return orderGoodsMapper.countByExample(example) != 0;
+        return mallOrderGoodsMapper.countByExample(example) != 0;
     }
 }

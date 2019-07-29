@@ -1,10 +1,9 @@
 package com.feel.mall.db.service;
 
-import com.feel.mall.db.dao.LitemallRegionMapper;
+import com.feel.mall.db.dao.MallRegionMapper;
 import com.github.pagehelper.PageHelper;
-import com.feel.mall.db.dao.LitemallRegionMapper;
-import com.feel.mall.db.domain.LitemallRegion;
-import com.feel.mall.db.domain.LitemallRegionExample;
+import com.feel.mall.db.domain.MallRegion;
+import com.feel.mall.db.domain.MallRegionExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -12,31 +11,31 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class LitemallRegionService {
+public class MallRegionService {
 
     @Resource
-    private LitemallRegionMapper regionMapper;
+    private MallRegionMapper mallRegionMapper;
 
-    public List<LitemallRegion> getAll(){
-        LitemallRegionExample example = new LitemallRegionExample();
+    public List<MallRegion> getAll(){
+        MallRegionExample example = new MallRegionExample();
         byte b = 4;
         example.or().andTypeNotEqualTo(b);
-        return regionMapper.selectByExample(example);
+        return mallRegionMapper.selectByExample(example);
     }
 
-    public List<LitemallRegion> queryByPid(Integer parentId) {
-        LitemallRegionExample example = new LitemallRegionExample();
+    public List<MallRegion> queryByPid(Integer parentId) {
+        MallRegionExample example = new MallRegionExample();
         example.or().andPidEqualTo(parentId);
-        return regionMapper.selectByExample(example);
+        return mallRegionMapper.selectByExample(example);
     }
 
-    public LitemallRegion findById(Integer id) {
-        return regionMapper.selectByPrimaryKey(id);
+    public MallRegion findById(Integer id) {
+        return mallRegionMapper.selectByPrimaryKey(id);
     }
 
-    public List<LitemallRegion> querySelective(String name, Integer code, Integer page, Integer size, String sort, String order) {
-        LitemallRegionExample example = new LitemallRegionExample();
-        LitemallRegionExample.Criteria criteria = example.createCriteria();
+    public List<MallRegion> querySelective(String name, Integer code, Integer page, Integer size, String sort, String order) {
+        MallRegionExample example = new MallRegionExample();
+        MallRegionExample.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
@@ -50,7 +49,7 @@ public class LitemallRegionService {
         }
 
         PageHelper.startPage(page, size);
-        return regionMapper.selectByExample(example);
+        return mallRegionMapper.selectByExample(example);
     }
 
 }

@@ -1,5 +1,5 @@
 {
-  "name": "litemall-vue",
+  "name": "mall-vue",
   "version": "0.1.0",
   "description": "litemall-vue basing on vant--mobile-mall 0.1.0",
   "author": "litemall <linlinjava@163.com>",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
     "axios": ">=0.18.1",
+    "babel-loader": "^8.0.6",
     "dayjs": "^1.7.7",
     "js-cookie": "2.2.0",
     "lodash": "^4.17.11",

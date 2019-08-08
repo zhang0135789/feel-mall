@@ -32,6 +32,8 @@
     "@vue/eslint-config-prettier": "^3.0.5",
     "babel-plugin-import": "^1.9.1",
     "babel-plugin-lodash": "^3.3.4",
+    "eslint": "^6.1.0",
+    "eslint-plugin-vue": "^5.2.3",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.17"
@@ -40,5 +42,7 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".eslintrc.js",
+  "keywords": []
 }
